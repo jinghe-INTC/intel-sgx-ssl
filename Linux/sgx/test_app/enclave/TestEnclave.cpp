@@ -352,7 +352,32 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test sha1_test completed\n");
-	
+
+        ret = sm3_test();
+        if (ret != 0)
+    {
+        printf("test sm3_test returned error %d\n", ret);
+        exit(ret);
+    }
+        printf("test sm3_test completed\n");
+
+        ret = sm4_test();
+        if (ret != 0)
+    {
+        printf("test sm4_test returned error %d\n", ret);
+        exit(ret);
+    }
+        printf("test sm4_test completed\n");
+
+        ret = sm2_test();
+        if (ret != 0)
+    {
+        printf("test sm2_test returned error %d\n", ret);
+        exit(ret);
+    }
+        printf("test sm2_test completed\n");
+
+
 	ret = threads_test();
 	if (ret != 0)
     {

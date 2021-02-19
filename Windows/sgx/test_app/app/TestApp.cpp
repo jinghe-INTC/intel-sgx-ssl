@@ -203,6 +203,15 @@ int run_all_tests()
 	if (run_test("sha256_test", sha256_test) != 0 && stop_on_failure) {
 		return 1;
 	}
+	if (run_test("sm2_test", sm2_test) != 0 && stop_on_failure) {
+		return 1;
+	}
+	if (run_test("sm3_test", sm3_test) != 0 && stop_on_failure) {
+		return 1;
+	}
+	if (run_test("sm4_test", sm4_test) != 0 && stop_on_failure) {
+		return 1;
+	}
 
 
 	//#define SUPPORT_FILES_APIS

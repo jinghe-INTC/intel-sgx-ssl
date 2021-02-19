@@ -531,6 +531,9 @@
     <ClCompile Include="tests\sha1test.c" />
     <ClCompile Include="tests\sha256t.c" />
     <ClCompile Include="tests\stdio_func.c" />
+    <ClCompile Include="tests\sm2test.c" />
+    <ClCompile Include="tests\sm3test.c" />
+    <ClCompile Include="tests\sm4test.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestEnclave.h" />

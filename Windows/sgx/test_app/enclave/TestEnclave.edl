@@ -59,6 +59,10 @@ public int ecdsa_test();
 public int sha1_test();
 public int sha256_test();
 
+public int sm2_test();
+public int sm3_test();
+public int sm4_test();
+
 		//public int t_base64_test();
 		//public int t_cipher_test();
 		public int rsa_test();
