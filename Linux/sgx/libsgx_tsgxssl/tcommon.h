@@ -64,6 +64,30 @@
 }
 
 
+#ifdef DO_SGX_ASSERT
+#define SGX_ASSERT(expr, ...) \
+{ \
+        if ( !(expr) ) \
+        { \
+                SGX_ERROR("File: %s, Line: %d\n", __FILE__, __LINE__); \
+                SGX_ERROR(__VA_ARGS__); \
+                SGX_EXIT(-1); \
+        } \
+}
+
+#define SGX_ASSERT_OUTSIDE_ENCLAVE(varp)                \
+        SGX_ASSERT(                                                                     \
+                varp == NULL || sgx_is_within_enclave(varp, 1) == 0, \
+                __FUNCTION__ " Error!!! "#varp" = %p is within enclave\n", varp)
+
+#else // DO_SGX_ASSERT
+
+#define SGX_ASSERT_OUTSIDE_ENCLAVE(varp)
+#define SGX_ASSERT(expr, ...)
+
+#endif
+
+
 #ifdef DO_SGX_LOG
 #define FSTART SGX_LOG("Enter %s\n", __FUNCTION__)
 #define FEND SGX_LOG("Exit from %s\n", __FUNCTION__)

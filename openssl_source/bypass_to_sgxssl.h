@@ -181,10 +181,7 @@
 #define mlock sgxssl_mlock
 #define madvise sgxssl_madvise
 
-/*
-#define fopen64 sgxssl_fopen64
 #define fopen sgxssl_fopen
-#define wfopen sgxssl_wfopen
 #define fclose sgxssl_fclose
 #define ferror sgxssl_ferror
 #define feof sgxssl_feof
@@ -195,9 +192,11 @@
 #define fwrite sgxssl_fwrite
 #define fgets sgxssl_fgets
 #define fputs sgxssl_fputs
-#define fileno sgxssl_fileno
 #define __fprintf_chk sgxssl_fprintf
-*/
+
+#define __vfprintf_chk sgxssl_vfprintf
+#define __fread_alias sgxssl_fread
+#define __fgets_alias sgxssl_fgets
 
 #if defined(SGXSDK_INT_VERSION) && (SGXSDK_INT_VERSION > 18)
 	#define _longjmp longjmp
@@ -279,6 +278,9 @@ char * sgxssl___builtin___strcpy_chk(char *dest, const char *src, unsigned int d
 #define __REDIRECT_NTH(name, proto, alias) name proto 
 #undef __REDIRECT_NTHNL
 #define __REDIRECT_NTHNL(name, proto, alias) name proto 
+
+#pragma weak ERR_print_errors_fp
+#pragma weak BN_print_fp
 
 #endif //_WIN32
 

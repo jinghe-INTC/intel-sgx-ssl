@@ -270,6 +270,18 @@ void priv_free(void* addr, const char *file, int line)
 */
 
 
+#ifdef __cplusplus
+extern "C" { 
+#endif
+
+//size_t sgxssl_fwrite(const void* src, size_t element_size, size_t cnt, void* fp)
+//{
+//        return 0;
+//}
+#ifdef __cplusplus
+}
+#endif
+
 void t_sgxssl_call_apis()
 {
     int ret = 0;

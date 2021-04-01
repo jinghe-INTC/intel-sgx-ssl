@@ -43,7 +43,7 @@ static int print_fp(const char *str, size_t len, void *fp)
     return 1;
 }
 
-void ERR_print_errors_fp(FILE *fp)
+void  ERR_print_errors_fp(FILE *fp)
 {
     ERR_print_errors_cb(print_fp, fp);
 }
