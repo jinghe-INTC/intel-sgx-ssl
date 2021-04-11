@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2017 Intel Corporation. All rights reserved.
+ * Copyright (C) 2011-2021 Intel Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -90,13 +90,6 @@ char *sgxssl_getenv(const char *name)
 
 	FEND;
 	return NULL;
-}
-
-int sgxssl_atexit(void (*function)(void))
-{
-	// Do nothing, assuming that registered function does allocations cleanup.
-	// This should be fine, as sgx_destroy_enclave cleans everything inside of enclave.
-	return 0;
 }
 
 }
