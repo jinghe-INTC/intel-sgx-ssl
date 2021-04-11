@@ -42,12 +42,6 @@ typedef unsigned int socklen_t;
 
 typedef long int suseconds_t;
 
-struct timeval
-{
-    time_t tv_sec;			// seconds
-    suseconds_t tv_usec;	// microseconds
-};
-
 
 struct timeb
 {

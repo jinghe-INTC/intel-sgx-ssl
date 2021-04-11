@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2017 Intel Corporation. All rights reserved.
+ * Copyright (C) 2011-2021 Intel Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -51,96 +51,6 @@ int sgxssl_getsockname(int sockfd, void *addr, socklen_t *addrlen)
 
 }
 
-int sgxssl_getsockopt(int sockfd, int level, int optname, void *optval, socklen_t *optlen)
-{
-	FSTART;
-
-	// It is unreachable under the assumption that TLS support is not required.
-	// Otherwise should be implemented as OCALL.
-	SGX_UNREACHABLE_CODE(SET_ERRNO);
-	FEND;
-
-	return -1;
-
-}
-
-int sgxssl_setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen)
-{
-	FSTART;
-
-	// It is unreachable under the assumption that TLS support is not required.
-	// Otherwise should be implemented as OCALL.
-	SGX_UNREACHABLE_CODE(SET_ERRNO);
-	FEND;
-
-	return -1;
-
-}
-
-int sgxssl_socket (int domain, int type, int protocol)
-{
-	FSTART;
-
-	// It is unreachable under the assumption that TLS support is not required.
-	// Otherwise should be implemented as OCALL.
-	SGX_UNREACHABLE_CODE(SET_ERRNO);
-	FEND;
-
-	return -1;
-
-}
-
-int sgxssl_bind(int sockfd, const void* addr, socklen_t addrlen)
-{
-	FSTART;
-
-	// It is unreachable under the assumption that TLS support is not required.
-	// Otherwise should be implemented as OCALL.
-	SGX_UNREACHABLE_CODE(SET_ERRNO);
-	FEND;
-
-	return -1;
-}
-
-int sgxssl_listen(int sockfd, int backlog)
-{
-	FSTART;
-
-	// It is unreachable under the assumption that TLS support is not required.
-	// Otherwise should be implemented as OCALL.
-	SGX_UNREACHABLE_CODE(SET_ERRNO);
-	FEND;
-
-	return -1;
-
-}
-
-int sgxssl_connect(int sockfd, const void* addr, socklen_t addrlen)
-{
-	FSTART;
-
-	// It is unreachable under the assumption that TLS support is not required.
-	// Otherwise should be implemented as OCALL.
-	SGX_UNREACHABLE_CODE(SET_ERRNO);
-	FEND;
-
-	return -1;
-
-}
-
-int sgxssl_accept(int fd, void* addr, socklen_t* addr_len)
-{
-	FSTART;
-
-	// It is unreachable under the assumption that TLS support is not required.
-	// Otherwise should be implemented as OCALL.
-	SGX_UNREACHABLE_CODE(SET_ERRNO);
-	FEND;
-
-	return -1;
-
-}
-
 void sgxssl_freeaddrinfo(void* res)
 {
 	FSTART;
@@ -151,19 +61,6 @@ void sgxssl_freeaddrinfo(void* res)
 	FEND;
 
 	return;
-
-}
-
-void* sgxssl_gethostbyname(const char *name)
-{
-	FSTART;
-
-	// It is unreachable under the assumption that TLS support is not required.
-	// Otherwise should be implemented as OCALL.
-	SGX_UNREACHABLE_CODE(SET_ERRNO);
-	FEND;
-
-	return NULL;
 
 }
 

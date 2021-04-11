@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2017 Intel Corporation. All rights reserved.
+ * Copyright (C) 2011-2021 Intel Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -38,90 +38,6 @@
 #define ENCLAVE_PAGE_SIZE	0x1000	// 4096 B
 
 extern "C" {
-
-int sgxssl_pipe (int pipefd[2])
-{
-	FSTART;
-
-	// The function is used only by the engines/e_dasync.c (dummy async engine).
-	// Adding fake implementation only to be able to distinguish pipe read/write from socket read/write
-	pipefd[0] = FAKE_PIPE_READ_FD;
-	pipefd[1] = FAKE_PIPE_WRITE_FD;
-
-	FEND;
-
-	// On error, -1 is returned, and errno is set appropriately
-	return 0;
-}
-
-size_t sgxssl_write (int fd, const void *buf, size_t n)
-{
-	FSTART;
-
-	if (fd == FAKE_PIPE_WRITE_FD) {
-		// With pipes the function is used only by the engines/e_dasync.c (dummy async engine).
-		SGX_UNSUPPORTED_FUNCTION(SET_ERRNO);
-
-		FEND;
-		// On error, -1 is returned, and errno is set appropriately
-		return -1;
-	}
-
-	// In addition, the function is used by bss_sock.c as writesocket function.
-	// It is unreachable under the assumption that TLS support is not required.
-	// Otherwise should be implemented as OCALL.
-	SGX_UNREACHABLE_CODE(SET_ERRNO);
-	FEND;
-
-	return -1;
-
-}
-
-size_t sgxssl_read(int fd, void *buf, size_t count)
-{
-	FSTART;
-
-	if (fd == FAKE_PIPE_READ_FD) {
-		// With pipes the function is used only by the engines/e_dasync.c (dummy async engine).
-		SGX_UNSUPPORTED_FUNCTION(SET_ERRNO);
-
-		FEND;
-		// On error, -1 is returned, and errno is set appropriately
-		return -1;
-	}
-
-	// In addition, the function is used by bss_sock.c as readsocket function.
-	// It is unreachable under the assumption that TLS support is not required.
-	// Otherwise should be implemented as OCALL.
-	SGX_UNREACHABLE_CODE(SET_ERRNO);
-	FEND;
-
-	return -1;
-}
-
-// TODO
-int sgxssl_close(int fd)
-{
-	FSTART;
-
-	if (fd == FAKE_PIPE_READ_FD ||
-		fd == FAKE_PIPE_WRITE_FD) {
-		// With pipes the function is used only by the engines/e_dasync.c (dummy async engine).
-		SGX_UNSUPPORTED_FUNCTION(SET_ERRNO);
-
-		FEND;
-		// On error, -1 is returned, and errno is set appropriately
-		return -1;
-	}
-
-	// In addition, the function is used by b_sock2.c as closesocket function.
-	// It is unreachable under the assumption that TLS support is not required.
-	// Otherwise should be implemented as OCALL.
-	SGX_UNREACHABLE_CODE(SET_ERRNO);
-	FEND;
-
-	return -1;
-}
 
 long sgxssl_sysconf(int name)
 {

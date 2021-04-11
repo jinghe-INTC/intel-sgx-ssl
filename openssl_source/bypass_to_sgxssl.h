@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2017 Intel Corporation. All rights reserved.
+ * Copyright (C) 2011-2021 Intel Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -204,25 +204,13 @@
 	#define _setjmp setjmp
 #endif
 
-#define pipe sgxssl_pipe
-#define __read_alias sgxssl_read
-#define write sgxssl_write
-#define close sgxssl_close
-
+#define __read_alias read
 
 #define sysconf sgxssl_sysconf
 
 #define getsockname sgxssl_getsockname
-#define getsockopt sgxssl_getsockopt
-#define setsockopt sgxssl_setsockopt
-#define socket sgxssl_socket
-#define bind sgxssl_bind
-#define listen sgxssl_listen
-#define connect sgxssl_connect
-#define accept sgxssl_accept
 #define getaddrinfo sgxssl_getaddrinfo
 #define freeaddrinfo sgxssl_freeaddrinfo
-#define gethostbyname sgxssl_gethostbyname
 #define getnameinfo sgxssl_getnameinfo
 #define ioctl sgxssl_ioctl
 
