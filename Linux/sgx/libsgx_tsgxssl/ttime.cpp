@@ -32,6 +32,7 @@
 #include "sgx_tsgxssl_t.h"
 #include "tcommon.h"
 #include <assert.h>
+#include <sys/select.h>
 
 extern sgx_status_t SGX_CDECL u_sgxssl_ftime(void* timeptr, uint32_t timeb_len) __attribute__((weak));
 
@@ -61,12 +62,6 @@ time_t sgxssl_time (time_t *timer)
 	return timeptr.time;
 
 }
-
-struct timeval
-{
-    time_t tv_sec;                     // seconds
-    suseconds_t tv_usec;       // microseconds
-};
 
 int sgxssl_gettimeofday(struct timeval *tv, struct timezone *tz)
 {

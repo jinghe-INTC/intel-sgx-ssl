@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011-2020 Intel Corporation. All rights reserved.
+# Copyright (C) 2011-2021 Intel Corporation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -88,7 +88,7 @@ Sgx_tssl_Cpp_Objects := $(addprefix $(OBJDIR)/, $(Sgx_tssl_Cpp_Files:.cpp=.o))
 Sgx_tssl_C_Objects := $(addprefix $(OBJDIR)/, $(Sgx_tssl_C_Files:.c=.o))
 Sgx_tssl_S_Objects := $(addprefix $(OBJDIR)/, $(Sgx_tssl_S_Files:.S=.o))
 
-Sgx_tssl_Include_Paths := -I. -I$(PACKAGE_INC) -I$(SGX_SDK_INC) -I$(SGX_SDK_INC)/tlibc -I$(LIBCXX_INC)
+Sgx_tssl_Include_Paths := -I. -I$(PACKAGE_INC) -I$(SGX_SDK_INC) -I$(SGX_SDK_INC)/socket -I$(SGX_SDK_INC)/tlibc -I$(LIBCXX_INC)
 
 Common_C_Cpp_Flags := -DOS_ID=$(OS_ID) $(SGX_COMMON_CFLAGS) -nostdinc -fdata-sections -ffunction-sections -Os -Wl,--gc-sections -fvisibility=hidden -fpie -fpic -fstack-protector -fno-builtin-printf -Wformat -Wformat-security $(Sgx_tssl_Include_Paths)
 Sgx_tssl_C_Flags := $(Common_C_Cpp_Flags) -Wno-implicit-function-declaration -std=c11 $(MITIGATION_CFLAGS)
