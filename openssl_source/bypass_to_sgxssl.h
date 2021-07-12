@@ -249,9 +249,6 @@ char * sgxssl___builtin___strcpy_chk(char *dest, const char *src, unsigned int d
 #define OPENSSL_issetugid sgxssl_OPENSSL_issetugid
 #define clock_gettime sgxssl_clock_gettime
 
-
-#define pthread_once sgxssl_pthread_once
-
 #define __ctype_b_loc sgxssl___ctype_b_loc
 #define __ctype_tolower_loc sgxssl___ctype_tolower_loc
 
