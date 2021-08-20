@@ -28,7 +28,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 #
-include buildenv.mk
+include $(SGX_SDK)/buildenv.mk
 include sgx/buildenv.mk
 LINUX_SGX_BUILD ?= 0
 EMPTY_SRC = check_lvi_toolset

@@ -28,7 +28,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 #
-include ../../buildenv.mk
+include $(SGX_SDK)/buildenv.mk
 include ../buildenv.mk
 ######## SGX SDK Settings ########
 SGX_MODE ?= HW

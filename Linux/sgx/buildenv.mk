@@ -89,3 +89,9 @@ else
       VCC=@$(CC)
       VCXX=@$(CXX)
 endif
+
+ifeq ($(MITIGATION-CVE-2020-0551), LOAD)
+    MITIGATION_LIB_PATH := cve_2020_0551_load
+else ifeq ($(MITIGATION-CVE-2020-0551), CF)
+    MITIGATION_LIB_PATH := cve_2020_0551_cf
+endif
