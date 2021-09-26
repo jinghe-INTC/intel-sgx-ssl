@@ -838,4 +838,10 @@ int RAND_set_seed_source_type(OSSL_LIB_CTX *ctx, const char *seed,
         && random_set_string(&dgbl->seed_propq, propq);
 }
 
+int ENGINE_set_default_RAND(ENGINE *e)
+{
+    #pragma message("Warning: ENGINE_set_default_RAND is not valid, since SGXSSL will always use RDRAND engine")
+    return 0;
+}
+
 #endif

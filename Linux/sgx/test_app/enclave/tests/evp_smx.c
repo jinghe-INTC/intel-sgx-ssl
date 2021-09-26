@@ -42,6 +42,25 @@
 #define SAFE_FREE(ptr, size) do {if (NULL != (ptr)) {memset_s(ptr, size, 0, size); free(ptr); (ptr)=NULL;}} while(0);
 #endif
 
+int EVP_PKEY_set_alias_type(EVP_PKEY *pkey, int type)
+{
+//    if (pkey->type == type) {
+//        return 1; /* it already is that type */
+//    }
+
+    /*
+     * The application is requesting to alias this to a different pkey type,
+     * but not one that resolves to the base type.
+     */
+//    if (EVP_PKEY_type(type) != EVP_PKEY_base_id(pkey)) {
+//        EVPerr(EVP_F_EVP_PKEY_SET_ALIAS_TYPE, EVP_R_UNSUPPORTED_ALGORITHM);
+//        return 0;
+//    }
+
+//   pkey->type = type;
+    return 1;
+}
+
 // default sm2_user_id defined by openssl
 unsigned char sm2_user_id[] = "1234567812345678";
 unsigned int sm2_user_id_len = sizeof(sm2_user_id)-1;

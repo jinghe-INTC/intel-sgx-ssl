@@ -592,7 +592,7 @@ int ecdh_test()
     size_t crv_len = 0, n = 0;
     BIO *out;
 
-    CRYPTO_set_mem_debug(1);
+    //TODO CRYPTO_set_mem_debug(1);
     //TODO CRYPTO_mem_ctrl(CRYPTO_MEM_CHECK_ON);
 
     RAND_seed(rnd_seed, sizeof rnd_seed);

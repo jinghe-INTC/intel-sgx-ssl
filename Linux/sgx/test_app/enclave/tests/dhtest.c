@@ -96,7 +96,7 @@ int dh_test()
     int ret = 1;
     BIO *out = NULL;
 
-    CRYPTO_set_mem_debug(1);
+//TODO     CRYPTO_set_mem_debug(1);
 //TODO    CRYPTO_mem_ctrl(CRYPTO_MEM_CHECK_ON);
 
     RAND_seed(rnd_seed, sizeof rnd_seed);
