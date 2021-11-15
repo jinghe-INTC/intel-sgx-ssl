@@ -42,25 +42,6 @@
 #define SAFE_FREE(ptr, size) do {if (NULL != (ptr)) {memset_s(ptr, size, 0, size); free(ptr); (ptr)=NULL;}} while(0);
 #endif
 
-int EVP_PKEY_set_alias_type(EVP_PKEY *pkey, int type)
-{
-//    if (pkey->type == type) {
-//        return 1; /* it already is that type */
-//    }
-
-    /*
-     * The application is requesting to alias this to a different pkey type,
-     * but not one that resolves to the base type.
-     */
-//    if (EVP_PKEY_type(type) != EVP_PKEY_base_id(pkey)) {
-//        EVPerr(EVP_F_EVP_PKEY_SET_ALIAS_TYPE, EVP_R_UNSUPPORTED_ALGORITHM);
-//        return 0;
-//    }
-
-//   pkey->type = type;
-    return 1;
-}
-
 // default sm2_user_id defined by openssl
 unsigned char sm2_user_id[] = "1234567812345678";
 unsigned int sm2_user_id_len = sizeof(sm2_user_id)-1;
@@ -482,6 +463,7 @@ int ecall_sm4_cbc(void)
 
     int len = 0;
     EVP_CIPHER_CTX* evp_ctx = NULL;
+    int pad = 0;
     int ret = 0;
 
     do { 
@@ -498,32 +480,37 @@ int ecall_sm4_cbc(void)
             ret = -2;
             break;
         }
+        if (EVP_CIPHER_CTX_set_padding(evp_ctx, pad) != 1) {
+            printf("Error: fail to set padding\n");
+            ret = -3;
+            break;
+		}
 
         // 3. Encrypt the plaintext and obtain the encrypted output
         if (EVP_EncryptUpdate(evp_ctx, encryptedText, &len, plainText, sizeof(plainText)) != 1) {
             printf("Error: fail to encrypt the plaintext\n");
-            ret = -3;
+            ret = -4;
             break;
         }
 
         // 4. Finalize the encryption
         if (EVP_EncryptFinal_ex(evp_ctx, encryptedText + len, &len) != 1) {
             printf("Error: fail to finalize the encryption\n");
-            ret = -4;
+            ret = -5;
             break;
         }
 
         // 5. Initialize decrypt, key and IV
         if (!EVP_DecryptInit_ex(evp_ctx, EVP_sm4_cbc(), NULL, (unsigned char*)key, iv)) {
             printf("Error: fail to initialize decrypt, key and IV\n");
-            ret = -5;
+            ret = -6;
             break;
         }
 
         // 6. Decrypt the ciphertext and obtain the decrypted output
         if (!EVP_DecryptUpdate(evp_ctx, decryptedText, &len, encryptedText, sizeof(encryptedText))) {
             printf("Error: fail to decrypt the ciphertext\n");
-            ret = -6;
+            ret = -7;
             break;
         }
 
@@ -534,7 +521,7 @@ int ecall_sm4_cbc(void)
         if (sizeof(decryptedText) % 16 != 0) {
             if (EVP_DecryptFinal_ex(evp_ctx, decryptedText + len, &len) <= 0) {
                 printf("Error: fail to finalize the decryption\n");
-                ret = -7;
+                ret = -8;
                 break;
             }
         }
@@ -542,7 +529,7 @@ int ecall_sm4_cbc(void)
         // 8. Compare original and decrypted text
         if (memcmp(plainText, decryptedText, sizeof(plainText)) != 0) {
             printf("Error: original and decrypted text is different\n");
-            ret = -8;
+            ret = -9;
             break;
         }
 
