@@ -321,7 +321,7 @@ void t_sgxssl_call_apis()
     }
 	printf("test bn_test completed\n");
 
-	ret = run_dh_test();
+	ret = dh_test();
 	if (ret != 0)
     {
     	printf("test dh_test returned error %d\n", ret);
