@@ -276,8 +276,8 @@ int rsa_test()
     int num;
     int n;
 
-    CRYPTO_set_mem_debug(1);
-    CRYPTO_mem_ctrl(CRYPTO_MEM_CHECK_ON);
+//TODO      CRYPTO_set_mem_debug(1);
+//TODO    CRYPTO_mem_ctrl(CRYPTO_MEM_CHECK_ON);
 
     RAND_seed(rnd_seed, sizeof rnd_seed); /* or OAEP may fail */
 

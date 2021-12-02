@@ -176,12 +176,13 @@ static int sign_sm2(const char* private_key, char* data, size_t data_size, unsig
             ret = -3;
             break;
         }
+#if OPENSSL_VERSION_NUMBER < 0x30000000
         if (EVP_PKEY_set_alias_type(evp_pkey, EVP_PKEY_SM2) != 1) {
             printf("Error: fail to modify the EVP_PKEY to use SM2\n");
             ret = -4;
             break;
         }
-
+#endif
         // 3. Sign
         evp_md_ctx = EVP_MD_CTX_new();
         if (evp_md_ctx == NULL) {
@@ -273,12 +274,13 @@ static int verify_sm2(const char* public_key, char* data, size_t data_size, unsi
             ret = -3;
             break;
         }
+#if OPENSSL_VERSION_NUMBER < 0x30000000
         if (EVP_PKEY_set_alias_type(evp_pkey, EVP_PKEY_SM2) != 1) {
             printf("Error: fail to modify the EVP_PKEY to use SM2\n");
             ret = -4;
             break;
         }
-
+#endif
         // 3. Verify
         evp_md_ctx = EVP_MD_CTX_new();
         if (evp_md_ctx == NULL) {

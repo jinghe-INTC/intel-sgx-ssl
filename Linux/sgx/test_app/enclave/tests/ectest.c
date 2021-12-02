@@ -1676,7 +1676,7 @@ char* getenv(char* name);
 
 int ec_test()
 {
-    CRYPTO_mem_ctrl(CRYPTO_MEM_CHECK_ON);
+//TODO    CRYPTO_mem_ctrl(CRYPTO_MEM_CHECK_ON);
 
     RAND_seed(rnd_seed, sizeof rnd_seed); /* or BN_generate_prime may fail */
 

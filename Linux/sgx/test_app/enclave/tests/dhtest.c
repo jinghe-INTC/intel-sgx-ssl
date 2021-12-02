@@ -865,7 +865,7 @@ static int dh_load_pkcs3_namedgroup_privlen_test(void)
 
 #endif
 
-int dh_test(void)
+int run_dh_test(void)
 {
     dh_test();
     dh_computekey_range_test();
