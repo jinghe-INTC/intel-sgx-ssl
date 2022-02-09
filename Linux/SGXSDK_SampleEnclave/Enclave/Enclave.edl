@@ -36,6 +36,9 @@ enclave {
     from "sgx_pthread.edl" import *;
 
     trusted {
+        public int rsa_test(void);
+        public int ecdsa_test(void);
+        public int sha1_test(void);
         public int sha256_test(void);
     };
     untrusted {

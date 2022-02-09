@@ -182,7 +182,7 @@ int SGX_CDECL main(int argc, char *argv[])
 {
     (void)(argc);
     (void)(argv);
-
+    int retval;
 
     /* Initialize the enclave */
     if(initialize_enclave() < 0){
@@ -190,15 +190,60 @@ int SGX_CDECL main(int argc, char *argv[])
         getchar();
         return -1; 
     }
-    int retval = -1;
-    if ( 0 != sha256_test(global_eid, &retval)) return -1;
-    if ( 0 != retval) return -1;
 
-    /* Destroy the enclave */
-    sgx_destroy_enclave(global_eid);
+    retval = -1;
+    if ( SGX_SUCCESS != rsa_test(global_eid, &retval)) 
+    {
+	    printf("test rsa_test ecall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test rsa_test returned error %d\n", retval);
+            goto exit;
+    } else printf("test rsa_test completed\n");
+
+    retval = -1;
+    if ( SGX_SUCCESS != ecdsa_test(global_eid, &retval))
+    {
+	    printf("test ecdsa_test ecdhall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test ecdsa_test returned error %d\n", retval);
+            goto exit;
+    } else printf("test ecdsa_test completed\n");
+
+    retval = -1;
+    if ( SGX_SUCCESS != sha1_test(global_eid, &retval)) 
+    {
+	    printf("test sha1_test ecall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test sha1_test returned error %d\n", retval);
+            goto exit;
+    } else printf("test sha1_test completed\n");
+
+    retval = -1;
+    if ( SGX_SUCCESS != sha256_test(global_eid, &retval)) 
+    {
+	    printf("test sha256_test ecall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test sha256_test returned error %d\n", retval);
+            goto exit;
+    } else printf("test sha256_test completed\n");
+
     
     printf("Info: SampleEnclave successfully returned.\n");
-
+exit:
+    /* Destroy the enclave */
+    sgx_destroy_enclave(global_eid);
     printf("Enter a character before exit ...\n");
     getchar();
     return 0;
