@@ -204,6 +204,42 @@ int SGX_CDECL main(int argc, char *argv[])
     } else printf("test rsa_test completed\n");
 
     retval = -1;
+    if ( SGX_SUCCESS != bn_test(global_eid, &retval)) 
+    {
+	    printf("test bn_test ecdhall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test bn_test returned error %d\n", retval);
+            goto exit;
+    } else printf("test bn_test completed\n");
+
+    retval = -1;
+    if ( SGX_SUCCESS != ecdh_test(global_eid, &retval)) 
+    {
+	    printf("test ecdh_test ecdhall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test ecdh_test returned error %d\n", retval);
+            goto exit;
+    } else printf("test ecdh_test completed\n");
+
+    retval = -1;
+    if ( SGX_SUCCESS != dh_test(global_eid, &retval)) 
+    {
+	    printf("test dh_test ecdhall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test dh_test returned error %d\n", retval);
+            goto exit;
+    } else printf("test dh_test completed\n");
+
+    retval = -1;
     if ( SGX_SUCCESS != ecdsa_test(global_eid, &retval))
     {
 	    printf("test ecdsa_test ecdhall failed\n");
