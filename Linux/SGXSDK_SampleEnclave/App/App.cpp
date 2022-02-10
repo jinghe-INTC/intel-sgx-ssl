@@ -235,7 +235,7 @@ int SGX_CDECL main(int argc, char *argv[])
     retval = -1;
     if ( SGX_SUCCESS != bn_test(global_eid, &retval)) 
     {
-	    printf("test bn_test ecdhall failed\n");
+	    printf("test bn_test ecall failed\n");
 	    goto exit;
     }
     if ( 0 != retval)
@@ -247,7 +247,7 @@ int SGX_CDECL main(int argc, char *argv[])
     retval = -1;
     if ( SGX_SUCCESS != ecdh_test(global_eid, &retval)) 
     {
-	    printf("test ecdh_test ecdhall failed\n");
+	    printf("test ecdh_test ecall failed\n");
 	    goto exit;
     }
     if ( 0 != retval)
@@ -259,7 +259,7 @@ int SGX_CDECL main(int argc, char *argv[])
     retval = -1;
     if ( SGX_SUCCESS != dh_test(global_eid, &retval)) 
     {
-	    printf("test dh_test ecdhall failed\n");
+	    printf("test dh_test ecall failed\n");
 	    goto exit;
     }
     if ( 0 != retval)
@@ -271,7 +271,7 @@ int SGX_CDECL main(int argc, char *argv[])
     retval = -1;
     if ( SGX_SUCCESS != ecdsa_test(global_eid, &retval))
     {
-	    printf("test ecdsa_test ecdhall failed\n");
+	    printf("test ecdsa_test ecall failed\n");
 	    goto exit;
     }
     if ( 0 != retval)
@@ -307,7 +307,7 @@ int SGX_CDECL main(int argc, char *argv[])
     retval = -1;
     if ( SGX_SUCCESS != threads_test(global_eid, &retval))
     {
-	    printf("test threads_test ecdhall failed\n");
+	    printf("test threads_test ecall failed\n");
 	    goto exit;
     }
     if ( 0 != retval)
@@ -315,6 +315,58 @@ int SGX_CDECL main(int argc, char *argv[])
             printf("test threads_test returned error %d\n", retval);
             goto exit;
     } else printf("test threads_test completed\n");
+	
+   //GM SM2 - sign and verify
+    retval = -1;
+    if ( SGX_SUCCESS != ecall_sm2(global_eid, &retval)) 
+    {
+	    printf("test ecall_sm2 ecdhall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test ecall_sm2 returned error %d\n", retval);
+            goto exit;
+    } else printf("test ecall_sm2 completed\n");
+
+    //GM SM3 - compute digest of message
+    retval = -1;
+    if ( SGX_SUCCESS != ecall_sm3(global_eid, &retval)) 
+    {
+	    printf("test ecall_sm3 ecdhall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test ecall_sm3 returned error %d\n", retval);
+            goto exit;
+    } else printf("test ecall_sm3 completed\n");
+
+    //GM SM4 - cbc encrypt and decrypt
+    retval = -1;
+    if ( SGX_SUCCESS != ecall_sm4_cbc(global_eid, &retval)) 
+    {
+	    printf("test ecall_sm4_cbc ecdhall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test ecall_sm4_cbc returned error %d\n", retval);
+            goto exit;
+    } else printf("test ecall_sm4_cbc completed\n");
+
+    //GM SM4 - ctr encrypt and decrypt
+    retval = -1;
+    if ( SGX_SUCCESS != ecall_sm4_ctr(global_eid, &retval)) 
+    {
+	    printf("test ecall_sm4_ctr ecdhall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test ecall_sm4_ctr returned error %d\n", retval);
+            goto exit;
+    } else printf("test ecall_sm4_ctr completed\n");
 
     printf("Info: SampleEnclave successfully returned.\n");
 exit:

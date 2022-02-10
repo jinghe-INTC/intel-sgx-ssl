@@ -47,6 +47,10 @@ enclave {
         public int sha256_test(void);
 	public void new_thread_func();
 	public int threads_test();
+        public int ecall_sm2();
+        public int ecall_sm3();
+        public int ecall_sm4_cbc();
+        public int ecall_sm4_ctr();
     };
     untrusted {
         void ocall_print_string([in, string] const char *str);
