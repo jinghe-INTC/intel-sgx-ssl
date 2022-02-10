@@ -204,6 +204,22 @@ int SGX_CDECL main(int argc, char *argv[])
         return -1; 
     }
 
+    if ( SGX_SUCCESS != rsa_key_gen(global_eid))
+    {
+	    printf("rsa_key_gen failed\n");
+	    goto exit;
+    }
+    printf("test rsa_key_gen completed\n");
+
+
+    if ( SGX_SUCCESS != ec_key_gen(global_eid))
+    {
+	    printf("ec_key_gen failed\n");
+	    goto exit;
+    }
+    printf("test ec_key_gen completed\n");
+
+
     retval = -1;
     if ( SGX_SUCCESS != rsa_test(global_eid, &retval)) 
     {

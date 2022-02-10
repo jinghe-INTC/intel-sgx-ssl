@@ -36,6 +36,8 @@ enclave {
     from "sgx_pthread.edl" import *;
 
     trusted {
+        public void rsa_key_gen(void);
+        public void ec_key_gen(void);
         public int rsa_test(void);
         public int bn_test(void);
         public int ecdh_test(void);
