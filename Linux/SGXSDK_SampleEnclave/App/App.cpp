@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <pthread.h>
 
 # include <unistd.h>
 # include <pwd.h>
@@ -176,6 +177,18 @@ void ocall_print_string(const char *str)
     printf("%s", str);
 }
 
+void* thread_test_func(void* p)
+{
+	new_thread_func(global_eid);
+	return NULL;
+}
+
+int ucreate_thread()
+{
+	pthread_t thread;
+	int res = pthread_create(&thread, NULL, thread_test_func, NULL);
+	return res;
+}
 
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
@@ -275,7 +288,18 @@ int SGX_CDECL main(int argc, char *argv[])
             goto exit;
     } else printf("test sha256_test completed\n");
 
-    
+    retval = -1;
+    if ( SGX_SUCCESS != threads_test(global_eid, &retval))
+    {
+	    printf("test threads_test ecdhall failed\n");
+	    goto exit;
+    }
+    if ( 0 != retval)
+    {
+            printf("test threads_test returned error %d\n", retval);
+            goto exit;
+    } else printf("test threads_test completed\n");
+
     printf("Info: SampleEnclave successfully returned.\n");
 exit:
     /* Destroy the enclave */

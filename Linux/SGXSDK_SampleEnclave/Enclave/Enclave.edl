@@ -43,9 +43,12 @@ enclave {
         public int ecdsa_test(void);
         public int sha1_test(void);
         public int sha256_test(void);
+	public void new_thread_func();
+	public int threads_test();
     };
     untrusted {
         void ocall_print_string([in, string] const char *str);
+	int ucreate_thread();
     };
 
 };
