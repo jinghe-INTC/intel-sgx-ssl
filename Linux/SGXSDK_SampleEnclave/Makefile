@@ -56,6 +56,16 @@ else
 	SGX_EDGER8R := $(SGX_SDK)/bin/x64/sgx_edger8r
 endif
 
+ifeq ($(wildcard /usr/local/include/openssl/opensslv.h),)
+$(error Please build and install OpenSSL! )
+endif
+
+OSSLVER_HEADER = $(shell grep OPENSSL_VERSION_TEXT /usr/local/include/openssl/opensslv.h | sed  -ne 's/^.*L \([0-9.]*[0-9][a-z]\).*$$/\1/p')
+OSSLVER_SGXSSL = $(shell strings $(SGX_LIBRARY_PATH)/libsgx_tcrypto.a | sed -ne 's/^OpenSSL \([0-9.]*[0-9][a-z]\).*$$/\1/p')
+ifneq ($(OSSLVER_HEADER), $(OSSLVER_SGXSSL))
+        $(error Versions of SGX SSL and OpenSSL header files not match!)
+endif
+
 ifeq ($(SGX_DEBUG), 1)
 ifeq ($(SGX_PRERELEASE), 1)
 $(error Cannot set SGX_DEBUG and SGX_PRERELEASE at the same time!!)
