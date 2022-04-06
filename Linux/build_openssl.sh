@@ -38,7 +38,7 @@ SGXSSL_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo $SGXSSL_ROOT
 
 OPENSSL_INSTALL_DIR="$SGXSSL_ROOT/../openssl_source/OpenSSL_install_dir_tmp"
-OPENSSL_VERSION=`cd ../../../openssl ; git status | head -1 | awk '{print $4}'`
+OPENSSL_VERSION=`cd ../../../openssl ; git status | head -1 | awk '{print $3}'`
 if [[ `echo $OPENSSL_VERSION | grep openssl-3` == "" ]]
 then
 	echo -e "\033[31m=================================================\033[0m"
