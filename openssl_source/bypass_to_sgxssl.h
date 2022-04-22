@@ -170,6 +170,15 @@
 #define _localtime64   sgxssl__localtime64
 #define _getsystime    sgxssl_getsystime
 
+/*windows.h*/
+#define Sleep sgxssl_sleep
+#define GetSystemInfo sgxssl_GetSystemInfo
+#define VirtualAlloc sgxssl_VirtualAlloc
+#define VirtualProtect sgxssl_VirtualProtect
+#define VirtualFree sgxssl_VirtualFree
+#define VirtualLock sgxssl_VirtualLock
+#define GetACP sgxssl_GetACP
+
 /*wincon.h*/
 #define FlushConsoleInputBuffer sgxssl_FlushConsoleInputBuffer
 
