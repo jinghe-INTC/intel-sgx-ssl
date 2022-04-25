@@ -164,11 +164,11 @@ int run_all_tests()
 	if (sgxssl__gmtime64_test() != 0 && stop_on_failure) {
 		return 1;
 	}
-#if 0
+
 	if (run_test("rsa_test", rsa_test) != 0 && stop_on_failure) {
 		return 1;
 	}
-#endif
+
 	if (run_test("des_test", des_test) != 0 && stop_on_failure) {
 		return 1;
 	}
@@ -176,11 +176,11 @@ int run_all_tests()
 	if (run_test("bn_test", bn_test) != 0 && stop_on_failure) {
 		return 1;
 	}
-#if 0
+
 	if (run_test("dh_test", dh_test) != 0 && stop_on_failure) {
 		return 1;
 	}
-#endif
+
 	if (run_test("ec_test", ec_test) != 0 && stop_on_failure) {
 		return 1;
 	}
@@ -188,22 +188,22 @@ int run_all_tests()
 	if (run_test("ecdh_test", ecdh_test) != 0 && stop_on_failure) {
 		return 1;
 	}
-
+#endif
 	if (run_test("ecdsa_test", ecdsa_test) != 0 && stop_on_failure) {
 		return 1;
 	}
-#endif
+
 	if (run_test("rand_test", rand_test) != 0 && stop_on_failure) {
 		return 1;
 	}
-#if 0
+
 	if (run_test("sha1_test", sha1_test) != 0 && stop_on_failure) {
 		return 1;
 	}
 	if (run_test("sha256_test", sha256_test) != 0 && stop_on_failure) {
 		return 1;
 	}
-#endif
+
 
 	//#define SUPPORT_FILES_APIS
 
