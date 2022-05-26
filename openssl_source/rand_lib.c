@@ -337,6 +337,7 @@ int RAND_priv_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
     }
 #endif
 
+    return get_sgx_rand_bytes(buf, num);
     rand = RAND_get0_private(ctx);
     if (rand != NULL)
         return EVP_RAND_generate(rand, buf, num, strength, 0, NULL, 0);
@@ -366,6 +367,7 @@ int RAND_bytes_ex(OSSL_LIB_CTX *ctx, unsigned char *buf, size_t num,
     }
 #endif
 
+    return get_sgx_rand_bytes(buf, num);
     rand = RAND_get0_public(ctx);
     if (rand != NULL)
         return EVP_RAND_generate(rand, buf, num, strength, 0, NULL, 0);
