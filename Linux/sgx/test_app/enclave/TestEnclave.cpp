@@ -328,14 +328,14 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test bn_test completed\n");
-#if 0
-	ret = dh_test();
+#if 1
+	ret = dhtest();
 	if (ret != 0)
     {
-    	printf("test dh_test returned error %d\n", ret);
+    	printf("test dhtest returned error %d\n", ret);
     	exit(ret);
     }
-	printf("test dh_test completed\n");
+	printf("test dhtest completed\n");
 #endif
 	ret = sha256_test();
 	if (ret != 0)
