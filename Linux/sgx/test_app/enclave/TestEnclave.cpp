@@ -328,7 +328,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test bn_test completed\n");
-#if 1
+
 	ret = dhtest();
 	if (ret != 0)
     {
@@ -336,7 +336,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test dhtest completed\n");
-#endif
+
 	ret = sha256_test();
 	if (ret != 0)
     {
