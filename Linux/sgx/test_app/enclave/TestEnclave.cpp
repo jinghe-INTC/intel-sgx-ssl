@@ -352,6 +352,14 @@ void t_sgxssl_call_apis()
     }
     printf("test dh_test completed\n");
 
+    ret = aesccm_test();
+    if (ret != 0)
+    {
+	    printf("test aesccm_test returned error %d\n", ret);
+	    exit(ret);
+    }
+    printf("test aesccm_test completed\n");
+
     ret = sha256_test();
     if (ret != 0)
     {
