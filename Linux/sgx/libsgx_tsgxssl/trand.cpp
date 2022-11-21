@@ -63,7 +63,7 @@ int sgx_rand_status(void)
 	return 1; 
 }
 
-int get_sgx_rand_bytes(unsigned char *buf, int num) 
+static int get_sgx_rand_bytes(unsigned char *buf, int num) 
 {
 	if (sgxssl_read_rand(buf, num) == 0) 
 	{
