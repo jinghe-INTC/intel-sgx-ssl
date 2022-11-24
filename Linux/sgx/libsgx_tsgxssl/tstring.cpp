@@ -30,6 +30,7 @@
  */
 
 #include <string.h>
+#include <mbusafecrt.h>
 
 #include "sgx_tsgxssl_t.h"
 #include "tcommon.h"
@@ -62,11 +63,11 @@ char * sgxssl___builtin___strcpy_chk(char *dest, const char *src, unsigned int d
 		return NULL;
 	}
 	
-	char * ret = strncpy(dest, src, src_len + 1);
+	if (NULL == strncpy_s(dest, dest_size, src, src_len + 1)) return NULL;
 
 	FEND;
 
-	return ret;
+	return dest;
 
 }
 

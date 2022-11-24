@@ -33,6 +33,7 @@
 #include <sgx_trts_exception.h>
 #include <sgx_cpuid.h>
 #include <stdlib.h>
+#include <mbusafecrt.h>
 
 #include "tcommon.h"
 
@@ -127,7 +128,7 @@ static void setup_cpuinfo(uint32_t *cpuinfo_table)
     
     if (cpuinfo_table) {
         // cpuid have been passed from urts
-        memcpy(cpuinfo, cpuinfo_table, sizeof(uint32_t)*8*4);
+        memcpy_s(cpuinfo, sizeof(cpuinfo), cpuinfo_table, sizeof(uint32_t)*8*4);
     } else {
         // Leaf 0
         status = sgx_cpuid((int*)cpuinfo[0], 0);
