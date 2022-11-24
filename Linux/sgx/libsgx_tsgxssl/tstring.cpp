@@ -91,11 +91,11 @@ char * sgxssl___builtin___strcat_chk(char *dest, const char *src, unsigned int d
 		return NULL;
 	}
 	
-	char * ret = strncat(dest, src, dest_len + src_len + 1);
+	if ( NULL == strncat_s(dest, dest_size, src, dest_len + src_len + 1)) return NULL;
 
 	FEND;
 
-	return ret;
+	return dest;
 }
 
 }
