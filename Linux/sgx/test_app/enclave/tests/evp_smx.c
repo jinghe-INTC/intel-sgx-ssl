@@ -148,6 +148,11 @@ static int create_key_pair_sm2(char** private_key, char** public_key)
 		goto end;
 	}
 	*private_key = (char*)malloc(pri_len+1);
+	if (!private_key) {
+                printf("Error: fail in calling malloc \n");
+                ret = -999;
+                goto end;
+        }
 	if (BIO_read(pri_bio, *private_key, pri_len) <= 0) {
 		printf("Error: fail to read SM2 private key from the BIO\n");
 		ret = -13;
@@ -182,6 +187,11 @@ static int create_key_pair_sm2(char** private_key, char** public_key)
 		goto end;
 	}
 	*public_key = (char*)malloc(pub_len+1);
+	if (!public_key) {
+                printf("Error: fail in calling malloc \n");
+                ret = -999;
+                goto end;
+        }
 	if (BIO_read(pub_bio, *public_key, pub_len) <= 0) {
 		printf("Error: fail to read SM2 public key from the BIO\n");
 		ret = -18;
