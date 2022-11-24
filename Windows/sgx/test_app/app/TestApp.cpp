@@ -42,8 +42,6 @@
 
 sgx_enclave_id_t enclaveID = 0;
 
-#define ENCLAVE_FILE L"TestEnclave.signed.dll"
-
 #define CREATE_ENCLAVE_ERR		1
 #define WSA_STARTUP_ERR			2
 #define GETADDRINFO_ERR			3
@@ -102,7 +100,7 @@ int sgxssl__gmtime64_test()
 			res->tm_wday != t_res->tm_wday ||
 			res->tm_isdst != t_res->tm_isdst)
 		{
-			printf("Check failed for tm = %ld\n", tm);
+			printf("Check failed for tm = %lld\n", tm);
 			ALogPrintEx(FAIL, "Test sgxssl__gmtime64 implementation inside an enclave, time = %ld", tm);
 			st = 1;
 			break;
@@ -125,9 +123,9 @@ int run_test(char* test_name, sgx_status_t(*func_name)(sgx_enclave_id_t eid, int
 	sgx_status_t status;
 	char test_case_id[AT_CASEID_MAX_LEN] = TEST_CASE_PREFIX;
 	size_t pref_len = strlen(TEST_CASE_PREFIX);
-	int copy_len = strlen(test_name);
+	int copy_len = (int)strnlen_s(test_name, 128);
 	if (copy_len > AT_CASEID_MAX_LEN - pref_len - 1) {
-		copy_len = AT_CASEID_MAX_LEN - pref_len - 1;
+		copy_len = (int)(AT_CASEID_MAX_LEN - pref_len - 1);
 	}
 	strncpy_s(test_case_id + pref_len, AT_CASEID_MAX_LEN - pref_len, test_name, copy_len);
 	test_case_id[pref_len + copy_len] = '\0';
