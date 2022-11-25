@@ -42,6 +42,7 @@
 		abort();	\
 	}	\
 }
+void ERR_print_errors_fp(FILE *fp);
 
 #if defined(__cplusplus)
 extern "C" {

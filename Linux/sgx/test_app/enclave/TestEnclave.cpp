@@ -252,7 +252,7 @@ int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
     int res = vsnprintf(buf, BUFSIZ, fmt, arg);
     if (res >=0) {
         sgx_status_t sgx_ret = uprint((const char *) buf);
-        TEST_CHECK(sgx_ret);
+        TEST_CHECK((int)sgx_ret);
     }
     return res;
 }

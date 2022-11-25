@@ -196,7 +196,7 @@ extern void init_exception_handler(uint32_t *cpuinfo_table)
     return;
 }
 
-__attribute__((constructor)) void const_init_exception_handler(void)
+__attribute__((constructor)) static void const_init_exception_handler(void)
 {
     if (exception_handler_initialized == 1)
         return;
