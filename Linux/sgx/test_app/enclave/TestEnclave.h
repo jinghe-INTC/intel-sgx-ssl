@@ -43,6 +43,7 @@
 	}	\
 }
 void ERR_print_errors_fp(FILE *fp);
+int BN_print_fp(FILE *fp, const BIGNUM *a);
 
 #if defined(__cplusplus)
 extern "C" {
