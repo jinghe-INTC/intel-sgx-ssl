@@ -132,7 +132,7 @@ extern "C" {
 
 		sgx_thread_mutex_t * mutex_it = it->second->mutex;
 		mutex_counter = it->second->spin_count;
-		for (int i = 0; i < mutex_counter; i++) {
+		for (unsigned int i = 0; i < mutex_counter; i++) {
 			if (!sgx_thread_mutex_trylock(mutex_it)) {
 				return;
 			}

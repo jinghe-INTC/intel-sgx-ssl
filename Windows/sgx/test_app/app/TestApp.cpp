@@ -101,7 +101,7 @@ int sgxssl__gmtime64_test()
 			res->tm_isdst != t_res->tm_isdst)
 		{
 			printf("Check failed for tm = %lld\n", tm);
-			ALogPrintEx(FAIL, "Test sgxssl__gmtime64 implementation inside an enclave, time = %ld", tm);
+			ALogPrintEx(FAIL, "Test sgxssl__gmtime64 implementation inside an enclave, time = %lld", tm);
 			st = 1;
 			break;
 		}
@@ -122,7 +122,7 @@ int run_test(char* test_name, sgx_status_t(*func_name)(sgx_enclave_id_t eid, int
 	int retVal = 0;
 	sgx_status_t status;
 	char test_case_id[AT_CASEID_MAX_LEN] = TEST_CASE_PREFIX;
-	size_t pref_len = strlen(TEST_CASE_PREFIX);
+	size_t pref_len = strnlen_s(TEST_CASE_PREFIX, AT_CASEID_MAX_LEN);
 	int copy_len = (int)strnlen_s(test_name, 128);
 	if (copy_len > AT_CASEID_MAX_LEN - pref_len - 1) {
 		copy_len = (int)(AT_CASEID_MAX_LEN - pref_len - 1);

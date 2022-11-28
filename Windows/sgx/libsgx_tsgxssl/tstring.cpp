@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <mbusafecrt.h>
 
 #include "tcommon.h"
 #include "wchar.h"
@@ -53,9 +54,9 @@ char * sgxssl__strdup(
 char* sgxssl_strcpy(char* dest, const char* src)
 {
 	FSTART;
-	char* ret = strncpy(dest, src, (strlen(src) + 1));
+	if (0 != strncpy_s(dest, strlen(dest), src, (strlen(src) + 1))) abort();
 	FEND;
-	return ret;
+	return dest;
 }
 
 int sgxssl__strnicmp(
@@ -144,7 +145,7 @@ int sgxssl_strerror_s(char *buf, size_t bufsz, errno_t errnum)
 		return EINVAL;
 	}
 
-	strncpy(buf, error, bufsz - 1);
+	if (0 != strncpy_s(buf, bufsz, error, bufsz - 1)) abort();
 	buf[bufsz - 1] = '\0';
 	FEND;
 
@@ -172,9 +173,9 @@ char* sgxssl_strcat(char* dest, const char* src)
 	SGX_ASSERT(dest != NULL && src != NULL);
 	SGX_LOG("sgxssl_strcat(%p[%s], %p[%s])\n", dest, dest, src, src);
 
-	char* res = strncat(dest, src, strlen(dest) + strlen(src) + 1);
+	if (0 != strncat_s(dest, strlen(dest) + strlen(src) + 1, src, strlen(dest) + strlen(src) + 1)) abort();
 	FEND;
-	return res;
+	return dest;
 }
 
 }

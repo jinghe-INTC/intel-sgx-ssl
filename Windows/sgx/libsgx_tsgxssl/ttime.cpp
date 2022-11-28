@@ -64,7 +64,7 @@ typedef struct _SYSTEMTIME {
 	WORD wMilliseconds;
 }SYSTEMTIME;
 
-void default_u_sgxssl_ftime64(void * timeptr, uint32_t timeb64Len)
+static void default_u_sgxssl_ftime64(void * timeptr, uint32_t timeb64Len)
 {
     (void)(timeptr);
     (void)(timeb64Len);
@@ -133,6 +133,7 @@ void WINBASEAPI sgxssl_GetSystemTime(_SYSTEMTIME * lpSystemTime)
 	// which is exactly the input for gmtime function
 	struct tm* tm_m = sgxssl__gmtime64(&timer);
 
+	if (!tm_m) abort();
 	// conversion from struct tm to SystemTime:
 	lpSystemTime->wYear = tm_m->tm_year + 1900; // in struct tm, tm_year is "current year - 1900", in systemtime wYear is the current year
 	lpSystemTime->wMonth = tm_m->tm_mon + 1; // in struct tm, tm_mon starts from 0, in systemtime wMonth starts from 1

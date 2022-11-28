@@ -190,6 +190,7 @@ static void alogGetTimeString(char* dateDest, char* timeDest)
 	time_t currentTime;
 
 	time(&currentTime);
+	if (!currentTime) abort();
 	strftime(dateDest, AT_DATE_STRING_LENGTH, "%Y-%m-%d", localtime(&currentTime));
 	strftime(timeDest, AT_TIME_STRING_LENGTH, "%H:%M:%S", localtime(&currentTime));
 }
