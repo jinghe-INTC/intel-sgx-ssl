@@ -34,14 +34,8 @@
 #include <string.h>
 #include <assert.h>
 
-#include <unistd.h>
-#include <pwd.h>
-#include <libgen.h>
 #include <stdlib.h>
 #include <pthread.h>
-
-# define MAX_PATH FILENAME_MAX
-
 
 #include <sgx_urts.h>
 
@@ -217,15 +211,6 @@ int main(int argc, char *argv[])
 {
     (void)(argc);
     (void)(argv);
-
-    /* Changing dir to where the executable is.*/
-    char absolutePath[MAX_PATH];
-    char *ptr = NULL;
-
-    ptr = realpath(dirname(argv[0]), absolutePath);
-
-    if (ptr == NULL || chdir(absolutePath) != 0)
-    	return 1;
 
     /* Initialize the enclave */
     if (initialize_enclave() < 0)
