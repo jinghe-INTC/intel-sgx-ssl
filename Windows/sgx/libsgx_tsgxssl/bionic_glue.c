@@ -31,6 +31,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <mbusafecrt.h>
 
 #include "bionic_glue.h"
 
@@ -47,8 +48,8 @@ int buffile_fwrite(BUF_FILE *stream, char* buf, size_t len)
 		return EOF;
 	}
 
-	memcpy(stream->ptr, buf, len);
+	memcpy_s(stream->ptr, sizeof(unsigned char), buf, len);
 	stream->ptr += len;
 	stream->len += len;			// Added line
-	return len;
+	return (int)len;
 }

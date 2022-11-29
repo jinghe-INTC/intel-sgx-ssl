@@ -79,7 +79,7 @@ struct timezone
 	#error No OS ID defined.	
 #endif
 #if OS_ID == Ubuntu
-	#include "/usr/include/x86_64-linux-gnu/bits/confname.h"
+	#define _SC_PAGESIZE 30
 #elif OS_ID == CentOS
 	#include "/usr/include/bits/confname.h"
 #elif OS_ID == NixPKG
