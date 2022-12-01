@@ -148,7 +148,7 @@ static int create_key_pair_sm2(char** private_key, char** public_key)
 		goto end;
 	}
 	*private_key = (char*)malloc(pri_len+1);
-	if (!private_key) {
+	if (!*private_key) {
                 printf("Error: fail in calling malloc \n");
                 ret = -999;
                 goto end;
@@ -187,7 +187,7 @@ static int create_key_pair_sm2(char** private_key, char** public_key)
 		goto end;
 	}
 	*public_key = (char*)malloc(pub_len+1);
-	if (!public_key) {
+	if (!*public_key) {
                 printf("Error: fail in calling malloc \n");
                 ret = -999;
                 goto end;
