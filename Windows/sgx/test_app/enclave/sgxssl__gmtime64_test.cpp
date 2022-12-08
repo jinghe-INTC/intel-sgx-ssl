@@ -44,5 +44,5 @@ void t_sgxssl__gmtime64(uint64_t timer, void* tm, uint32_t length)
 
 	struct tm* time = sgxssl__gmtime64(&timer);
 	if (!time) abort();
-	memcpy_s(tm, length, (const void*)time, length);
+	TEST_ASSERT(0 != memcpy_s(tm, length, (const void*)time, length));
 }

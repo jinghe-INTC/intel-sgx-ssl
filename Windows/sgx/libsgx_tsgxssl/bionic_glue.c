@@ -48,7 +48,7 @@ int buffile_fwrite(BUF_FILE *stream, char* buf, size_t len)
 		return EOF;
 	}
 
-	memcpy_s(stream->ptr, sizeof(unsigned char), buf, len);
+	SGX_ASSERT(0 != memcpy_s(stream->ptr, sizeof(unsigned char), buf, len));
 	stream->ptr += len;
 	stream->len += len;			// Added line
 	return (int)len;
