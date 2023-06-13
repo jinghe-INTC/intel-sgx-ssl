@@ -1,0 +1,25 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: download SDK
+      run: wget https://download.01.org/intel-sgx/latest/linux-latest/distro/ubuntu22.04-server/sgx_linux_x64_sdk_2.19.100.3.bin
+    - name: install SDK
+      run: chmod +x *.bin; echo yes | ./sgx_linux_x64_sdk_2.19.100.3.bin
+    - name: download OpenSSL code
+      run: wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz; mv openssl-1.1.1u.tar.gz openssl_source/
+    - name: build SGXSSL
+      run: source sgxsdk/environment; cd Linux; make all
+    - name: run unit test
+      run: source sgxsdk/environment; cd Linux; SGX_MODE=SIM make test
