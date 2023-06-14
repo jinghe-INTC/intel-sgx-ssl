@@ -22,4 +22,4 @@ jobs:
     - name: build SGXSSL
       run: source sgxsdk/environment; cd Linux; make all
     - name: run unit test
-      run: source sgxsdk/environment; cd Linux; SGX_MODE=SIM make test
+      run: source sgxsdk/environment; cd Linux; make -C sgx/test_app/ clean; SGX_MODE=SIM make test
