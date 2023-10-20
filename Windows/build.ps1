@@ -30,20 +30,21 @@ try {
 }
 
 try {
+    $SGXSSL_ROOT = Get-Location
     if (-not (Test-Path "../openssl_source/$OSSL_version.tar.gz" -PathType Leaf))
     {
         Write-Error "OpenSSL source code package not available"
         throw 
     }
     Write-Output "Building SGXSSL with: $OSSL_version"
-    ForEach ($Config in ("debug", "release", "release_cve-2020-0551-load", "release_cve-2020-0551-cf")) {
+    ForEach ($Config in ("debug", "release", "cve-2020-0551-load-release", "cve-2020-0551-cf-release")) {
         Write-Output "  Building libraries in x64, $Config..."
-        $SKIP_test = ""
+        $SKIP_test = "NO"
         if ( $PSW_available -ne 1)
         {
             $SKIP_test = "SIM"
         }
-        Start-Process .\build_package.cmd -ArgumentList "x64_$Config $OSSL_version $SKIP_test no-clean" -Wait
+        Start-Process powershell -ArgumentList ".\build_pkg.ps1 -my_Configuration $Config -OPENSSL_version $OSSL_version -TEST_MODE $SKIP_test -Clean 0" -Wait
         if ($LASTEXITCODE -ne 0) {
             throw "  Failed building in config $Config, exiting..."
             Exit 1
@@ -61,10 +62,12 @@ try {
     }
     Set-Location package
     Compress-Archive -Path docs, include, lib  -DestinationPath ..\sgxssl.$SGXSSL_version_numbers.zip -Update
-    Set-Location ..
+    
 } catch {
     Write-Output $_.ToString()
     Write-Output $_.ScriptStackTrace
     Exit 1
+} finally  {
+    set-location $SGXSSL_ROOT
 }
 Exit 0
