@@ -1,3 +1,39 @@
+#
+# Copyright (C) 2011-2023 Intel Corporation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+#   * Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#   * Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in
+#     the documentation and/or other materials provided with the
+#     distribution.
+#   * Neither the name of Intel Corporation nor the names of its
+#     contributors may be used to endorse or promote products derived
+#     from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#
+
+
+#=========================================#
+# Do not edit this script below this line #
+#=========================================#
+
 Param(
 	[string]$Platform = "x64",
     [string]$VS_CMD_PLFM = "amd64",
@@ -38,6 +74,19 @@ try {
     Copy-Item sgx_config.conf $OPENSSL_VERSION\
     Copy-Item x86_64-xlate.pl $OPENSSL_VERSION\crypto\perlasm
     Copy-Item threads_win.c $OPENSSL_VERSION\crypto\
+
+    if ($my_Configuration -eq "cve-2020-0551-load-release")
+    {
+        Copy-Item Windows\crypto\* $OPENSSL_VERSION\crypto -Force -Recurse
+    }
+
+    if ($my_Configuration -eq "cve-2020-0551-cf-release")
+    {
+        if (Test-Path 'crypto') { Remove-Item -Path 'crypto' -Force -Recurse }
+        Copy-Item Windows\crypto .\ -Force -Recurse
+        Get-ChildItem -Path 'crypto' -Recurse -File  | ForEach-Object { (Get-Content $_.FullName) | Where-Object { $_ -notmatch 'load_only' } | Set-Content $_.FullName }
+        Copy-Item crypto\* $OPENSSL_VERSION\crypto -Force -Recurse
+    }
 
     Set-Location $OPENSSL_VERSION
     Copy-Item  $Env:SGXSDKInstallPath\scripts\sgx-asm-pp.py .
