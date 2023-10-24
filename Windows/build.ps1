@@ -1,5 +1,5 @@
 Param(
-	[Parameter(mandatory=$true)][string] $OSSL_version,
+	[Parameter(mandatory=$false)][string]$OPENSSL_VERSION = "openssl-3.0.0",
     [Parameter(mandatory=$false)][bool] $PSW_available=1
 )
 function ExecuteCommand() {
@@ -25,28 +25,32 @@ try {
     ExecuteCommand "nasm" "-v"
     ExecuteCommand "perl" "-v"
 } catch {
-    Write-Error "cannot find nasm or perl, exit"
+    Write-Error "cannot find nasm or perl, exiting"
     Exit 1
 }
 
 try {
     $SGXSSL_ROOT = Get-Location
-    if (-not (Test-Path "../openssl_source/$OSSL_version.tar.gz" -PathType Leaf))
+    if (-not (Test-Path "../openssl_source/$OpenSSL_version.tar.gz" -PathType Leaf))
     {
-        Write-Error "OpenSSL source code package not available"
-        throw 
+        Write-Output "$OpenSSL_version source code package not available, exiting"
+        Exit 1 
     }
-    Write-Output "Building SGXSSL with: $OSSL_version"
+    Write-Output "Building SGXSSL with: $OpenSSL_version"
     ForEach ($Config in ("debug", "release", "cve-2020-0551-load-release", "cve-2020-0551-cf-release")) {
         Write-Output "  Building libraries in x64, $Config..."
-        $SKIP_test = "NO"
+        $BUILD_LEVEL = "ALL"
         if ( $PSW_available -ne 1)
         {
-            $SKIP_test = "SIM"
+            $BUILD_LEVEL = "SKIP_TEST"
         }
-        Start-Process powershell -ArgumentList ".\build_pkg.ps1 -my_Configuration $Config -OPENSSL_version $OSSL_version -TEST_MODE $SKIP_test -Clean 0" -Wait
-        if ($LASTEXITCODE -ne 0) {
-            throw "  Failed building in config $Config, exiting..."
+        $Build_proc = Start-Process powershell -ArgumentList ".\build_pkg.ps1 -my_Configuration $Config -OPENSSL_version $OpenSSL_version -BUILD_LEVEL $BUILD_LEVEL -Clean 0" -PassThru
+        $Build_proc.WaitForExit()
+        if ($Build_proc.HasExited) {
+            # Write-Host "The build process has exited."
+        }
+        if ($Build_proc.ExitCode  -ne 0) {
+            Write-Output "  Failed building config $Config, exiting..."
             Exit 1
         } else {
             Write-Output "  Successfully built config $Config"
@@ -55,7 +59,7 @@ try {
 
     $currentTime = Get-Date -format "dd-MMM-yyyy HH:mm:ss"
     Write-Output "Build completed: Zipping package $currentTime"
-    $SGXSSL_version_numbers = ($OSSL_version -split '-')[1]
+    $SGXSSL_version_numbers = ($OpenSSL_version -split '-')[1]
     if ( $PSW_available -eq 1) 
     {
         $SGXSSL_version_numbers = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Intel\SGX_PSW" -Name "Version")."Version" + "_" + $SGXSSL_version_numbers

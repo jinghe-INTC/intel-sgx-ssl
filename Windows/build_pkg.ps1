@@ -3,9 +3,9 @@ Param(
     [string]$VS_CMD_PLFM = "amd64",
     [string]$OPENSSL_CFG_PLFM ="sgx-VC-WIN64A",
     [Parameter(mandatory=$true)][string]$my_Configuration,
-    [Parameter(mandatory=$true)][string]$OPENSSL_VERSION,
+    [Parameter(mandatory=$false)][string]$OPENSSL_VERSION = "openssl-3.0.0",
     [Parameter(mandatory=$false)][bool] $Clean = 0,
-    [Parameter(mandatory=$false)][string] $TEST_MODE ="",
+    [Parameter(mandatory=$false)][string] $BUILD_LEVEL ="",
     [Parameter(mandatory=$false)][bool] $Pause_at_end = 0    
 )
 
@@ -24,6 +24,7 @@ function Invoke-Environment {
 }
 
 try {
+    Write-Output "Don't close this Window. Building SGXSSL in $my_Configuration config... "
     $SGXSSL_ROOT = Get-Location
     perl svn_revision.pl > sgx\libsgx_tsgxssl\tsgxssl_version.h
     Set-Location ..\openssl_source
@@ -47,8 +48,27 @@ try {
     }
 
     $CVE_2020_0551_MITIGATIONS= ""
+    if ($my_Configuration -eq "cve-2020-0551-cf-release")
+    {
+        $CVE_2020_0551_MITIGATIONS = "-Qspectre-load-cf"
+    } elseif ($my_Configuration -eq "cve-2020-0551-load-release")
+    {
+        $CVE_2020_0551_MITIGATIONS = "-Qspectre-load"
+    }
+
     $ADDITIONAL_CONF = ""
-    Start-Process perl -ArgumentList "Configure --config=sgx_config.conf $OPENSSL_CFG_PLFM  $CVE_2020_0551_MITIGATIONS $ADDITIONAL_CONF no-dtls no-idea no-mdc2 no-rc5 no-rc4 no-bf no-ec2m no-camellia no-cast no-srp no-padlockeng no-dso no-shared no-ui-console no-ssl3 no-md2 no-md4 no-stdio -FI$SGXSSL_ROOT\..\openssl_source\bypass_to_sgxssl.h -D_NO_CRT_STDIO_INLINE -DOPENSSL_NO_SOCK -DOPENSSL_NO_DGRAM -DOPENSSL_NO_ASYNC " -wait
+    if ( $Env:OSSL3ONLY -eq "1" )
+    {
+        $ADDITIONAL_CONF= "--api\=3.0 no-deprecated"
+    }
+
+    $Perl_config_proc = Start-Process perl -ArgumentList "Configure --config=sgx_config.conf $OPENSSL_CFG_PLFM  $CVE_2020_0551_MITIGATIONS $ADDITIONAL_CONF no-dtls no-idea no-mdc2 no-rc5 no-rc4 no-bf no-ec2m no-camellia no-cast no-srp no-padlockeng no-dso no-shared no-ui-console no-ssl3 no-md2 no-md4 no-stdio -FI$SGXSSL_ROOT\..\openssl_source\bypass_to_sgxssl.h -D_NO_CRT_STDIO_INLINE -DOPENSSL_NO_SOCK -DOPENSSL_NO_DGRAM -DOPENSSL_NO_ASYNC " -wait -PassThru
+    if ($Perl_config_proc.ExitCode  -ne 0) {
+        Write-Output "  Failed configuring OpenSSL code, exiting..."
+        Exit 1
+    } else {
+        Write-Output "  Successfully configured OpenSSL code"
+    }
     (Get-Content crypto\engine\tb_rand.c) |  Foreach-Object {$_ -replace 'ENGINE_set_default_RAND', 'dummy_ENGINE_set_default_RAND'} | Out-File crypto\engine\tb_rand.c
     Invoke-Environment "C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Auxiliary\Build\vcvars64.bat"
     nmake build_generated libcrypto.lib
@@ -59,17 +79,31 @@ try {
     Copy-Item  include\openssl\* $SGXSSL_ROOT\package\include\openssl\ -Recurse -Force
     Copy-Item  include\* $SGXSSL_ROOT\sgx\test_app\enclave\ -Recurse -Force
 
-    set-location $SGXSSL_ROOT\sgx
-    MSBUILD SGXOpenSSLLibrary.sln /p:Configuration=$my_Configuration /p:Platform=$Platform /t:Rebuild
-    Copy-Item $Platform\$my_Configuration\libsgx_tsgxssl.lib $SGXSSL_ROOT\package\lib\$Platform\$my_Configuration\ -Force
-    Copy-Item $Platform\$my_Configuration\libsgx_usgxssl.lib $SGXSSL_ROOT\package\lib\$Platform\$my_Configuration\ -Force
-    if ($my_Configuration -eq "debug")
+    if ($BUILD_LEVEL -ne "CRYPTO_ONLY")
     {
-        Copy-Item  libsgx_tsgxssl\$Platform\$my_Configuration\libsgx_tsgxssl.pdb $SGXSSL_ROOT\package\lib\$Platform\$my_Configuration\ -Force
-        Copy-Item  libsgx_usgxssl\$Platform\$my_Configuration\libsgx_usgxssl.pdb $SGXSSL_ROOT\package\lib\$Platform\$my_Configuration\ -Force
+        set-location $SGXSSL_ROOT\sgx
+        MSBUILD SGXOpenSSLLibrary.sln /p:Configuration=$my_Configuration /p:Platform=$Platform /t:Rebuild
+        Copy-Item $Platform\$my_Configuration\libsgx_tsgxssl.lib $SGXSSL_ROOT\package\lib\$Platform\$my_Configuration\ -Force
+        Copy-Item $Platform\$my_Configuration\libsgx_usgxssl.lib $SGXSSL_ROOT\package\lib\$Platform\$my_Configuration\ -Force
+        if ($my_Configuration -eq "debug")
+        {
+            Copy-Item  libsgx_tsgxssl\$Platform\$my_Configuration\libsgx_tsgxssl.pdb $SGXSSL_ROOT\package\lib\$Platform\$my_Configuration\ -Force
+            Copy-Item  libsgx_usgxssl\$Platform\$my_Configuration\libsgx_usgxssl.pdb $SGXSSL_ROOT\package\lib\$Platform\$my_Configuration\ -Force
+        }
+        if ($BUILD_LEVEL -ne "SKIP_TEST")
+        {
+            set-location $Platform\$my_Configuration
+            & .\TestApp.exe
+            if ($LASTEXITCODE -ne 0) {
+                Write-Error 'TestApp Execution failed'
+                Exit 1
+            }
+        }
     }
+
 } catch {
-    Write-Error "Failed!"
+    Write-Output $_.ToString()
+    Write-Output $_.ScriptStackTrace
     Exit 1
 } finally  {
     set-location $SGXSSL_ROOT
