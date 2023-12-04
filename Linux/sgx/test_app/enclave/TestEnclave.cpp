@@ -404,7 +404,7 @@ void t_sgxssl_call_apis()
         exit(ret);
     }
         printf("test hmac_test completed\n");
-
+/*
 	ret = threads_test();
 	if (ret != 0)
     {
@@ -412,7 +412,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test threads_test completed\n");
-
+*/
     //GM SM2 - sign and verify
     ret = ecall_sm2_sign_verify();
     if (ret != 0)

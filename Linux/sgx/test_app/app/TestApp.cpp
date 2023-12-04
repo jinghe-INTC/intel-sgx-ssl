@@ -247,7 +247,7 @@ void usgx_exit(int reason)
 	exit(reason);
 }
 
-
+/*
 void* thread_test_func(void* p)
 {
 	new_thread_func(global_eid);
@@ -260,7 +260,7 @@ int ucreate_thread()
 	int res = pthread_create(&thread, NULL, thread_test_func, NULL);
 	return res;
 }
-
+*/
 /* Application entry */
 int main(int argc, char *argv[])
 {

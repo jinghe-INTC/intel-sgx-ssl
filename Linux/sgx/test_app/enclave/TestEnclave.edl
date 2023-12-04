@@ -43,13 +43,13 @@ from "sgx_pthread.edl" import *;
     untrusted {
         void uprint([in, string] const char *str);
         void usgx_exit(int reason);
-        int ucreate_thread();
+       // int ucreate_thread();
     };
 
 
     trusted {
         public void t_sgxssl_call_apis();
-        public void new_thread_func();
+        //public void new_thread_func();
  
     };
 };
