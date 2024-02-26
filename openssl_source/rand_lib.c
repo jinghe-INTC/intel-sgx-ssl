@@ -594,7 +594,12 @@ static EVP_RAND_CTX *rand_new_seed(OSSL_LIB_CTX *libctx)
         name = "SEED-SRC";
     }
 
-    rand = EVP_RAND_fetch(libctx, name, propq);
+
+    if (dgbl == NULL)
+        return NULL;
+    name = dgbl->seed_name != NULL ? dgbl->seed_name : "SEED-SRC";
+    rand = EVP_RAND_fetch(libctx, name, dgbl->seed_propq);
+
     if (rand == NULL) {
         ERR_raise(ERR_LIB_RAND, RAND_R_UNABLE_TO_FETCH_DRBG);
         goto err;
