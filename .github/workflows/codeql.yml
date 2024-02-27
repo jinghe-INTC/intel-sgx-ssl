@@ -52,7 +52,7 @@ jobs:
     - name: build SGXSSL
       run: cd Linux; make sgxssl_no_mitigation
     - name: run unit test in SIM
-      run: cd Linux; make -C sgx/test_app/ clean; SKIP_INTELCPU_CHECK=TRUE SGX_MODE=SIM make test
+      run: source /opt/intel/sgxsdk/environment; cd Linux; make -C sgx/test_app/ clean; SKIP_INTELCPU_CHECK=TRUE SGX_MODE=SIM make test
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
