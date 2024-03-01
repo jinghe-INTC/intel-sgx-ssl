@@ -36,7 +36,7 @@
 # this variable must be set to the path where Intel® Software Guard Extensions SDK is installed
 SGXSSL_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo $SGXSSL_ROOT
-wget https://www.openssl.org/source/openssl-3.0.13.tar.gz --directory-prefix=../../openssl_source/ ||  exit 1
+
 OPENSSL_VERSION=`ls $SGXSSL_ROOT/../openssl_source/*3.0.*.tar.gz | head -1 | grep -o '[^/]*$' | sed -s -- 's/\.tar\.gz//'`
 if [ "$OPENSSL_VERSION" == "" ] 
 then
