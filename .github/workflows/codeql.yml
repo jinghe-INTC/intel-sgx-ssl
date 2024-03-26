@@ -17,7 +17,7 @@ on:
   pull_request:
     branches: [ "support_openssl_3.1*" ]
   schedule:
-    - cron: '15 21 * * 1'
+    - cron: '14 21 * * 1'
 
 jobs:
   analyze:
