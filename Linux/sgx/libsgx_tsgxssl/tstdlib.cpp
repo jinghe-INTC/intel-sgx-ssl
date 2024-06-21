@@ -66,25 +66,17 @@ char *sgxssl_getenv(const char *name)
 		return NULL;
 	}
 
-	if (!strcmp(name, "OPENSSL_CONF" )) {
-		FEND;
-		return NULL;
-	}
+        char retval[100];
+        sgx_status_t sgx_ret = u_sgxssl_getenv((char **)&retval, name);
 
-	if (!strcmp(name, "OPENSSL_ENGINES" )) {
-		FEND;
-		return (char *) PATH_DEV_NULL;
-	}
-
-	if (!strcmp(name, "OPENSSL_ALLOW_PROXY_CERTS" )) {
-		FEND;
-		return NULL;
-	}
-	
-	if (!strcmp(name, "OPENSSL_ia32cap" )) {
-		FEND;
-		return NULL;
-	}
+        if (sgx_ret != SGX_SUCCESS)
+        {
+                errno = EFAULT;
+                FEND;
+                return NULL;
+        } else {
+                return (char *)retval;
+        }
 
 	SGX_UNREACHABLE_CODE(SET_ERRNO);
 

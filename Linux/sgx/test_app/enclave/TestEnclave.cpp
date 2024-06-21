@@ -43,6 +43,7 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
+#include <openssl/provider.h>
 
 #define ADD_ENTROPY_SIZE	32
 
@@ -290,13 +291,25 @@ void priv_free(void* addr, const char *file, int line)
 
 void t_sgxssl_call_apis()
 {
+    OSSL_PROVIDER *prov;
     int ret = 0;
     
     printf("Start tests\n");
     
     SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
+    prov = OSSL_PROVIDER_load(NULL, "default");
+/*    prov = OSSL_PROVIDER_load(NULL, "legacy");
 
-    //CRYPTO_set_mem_functions(priv_malloc, priv_realloc, priv_free);
+    if ( !prov ) return;
+    const char *build = NULL;
+    OSSL_PARAM request[] = {
+        { "buildinfo", OSSL_PARAM_UTF8_PTR, &build, 0, 0 },
+        { NULL, 0, NULL, 0, 0 }
+    };
+
+    OSSL_PROVIDER_get_params(prov, request);
+    printf("Provider buildinfo: %s\n", build);
+ */
 
     // Initialize SGXSSL crypto
     OPENSSL_init_crypto(0, NULL);
