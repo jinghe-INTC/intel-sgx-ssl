@@ -298,18 +298,21 @@ void t_sgxssl_call_apis()
     
     SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
     prov = OSSL_PROVIDER_load(NULL, "default");
-/*    prov = OSSL_PROVIDER_load(NULL, "legacy");
-
     if ( !prov ) return;
     const char *build = NULL;
     OSSL_PARAM request[] = {
         { "buildinfo", OSSL_PARAM_UTF8_PTR, &build, 0, 0 },
         { NULL, 0, NULL, 0, 0 }
     };
+    OSSL_PROVIDER_get_params(prov, request);
+    printf("Provider buildinfo: %s\n", build);
+
+    prov = OSSL_PROVIDER_load(NULL, "base");
+    if ( !prov ) return;
+    build = NULL;
 
     OSSL_PROVIDER_get_params(prov, request);
     printf("Provider buildinfo: %s\n", build);
- */
 
     // Initialize SGXSSL crypto
     OPENSSL_init_crypto(0, NULL);
