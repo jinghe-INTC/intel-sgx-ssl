@@ -179,7 +179,8 @@ ifeq ($(wildcard $(Enclave_Test_Key)),)
 	@echo "The project will generate a key<Enclave_private_test.pem> for test."
 	@openssl genrsa -out $(Enclave_Test_Key) -3 3072
 endif
-	@$(SGX_ENCLAVE_SIGNER) sign -key $(Enclave_Test_Key) -enclave TestEnclave.so -out $@ -config $(ENCLAVE_DIR)/TestEnclave.config.xml
+	@$(SGX_ENCLAVE_SIGNER) sign -key $(Enclave_Test_Key) -enclave TestEnclave.so -out $@ \
+		-config $(ENCLAVE_DIR)/TestEnclave.config.xml -fipsfile ./fips.so
 	@echo "SIGN =>  $@"
 
 clean:

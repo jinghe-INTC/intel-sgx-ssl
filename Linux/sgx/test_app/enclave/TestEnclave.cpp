@@ -43,6 +43,7 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
+#include <openssl/provider.h>
 
 #define ADD_ENTROPY_SIZE	32
 
@@ -294,6 +295,7 @@ void t_sgxssl_call_apis()
     
     printf("Start tests\n");
     
+    OSSL_PROVIDER_load(NULL, "fips");
     SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
 
     //CRYPTO_set_mem_functions(priv_malloc, priv_realloc, priv_free);
