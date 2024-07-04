@@ -36,6 +36,7 @@
 #include "TestEnclave.h"
 #include "TestEnclave_t.h"  /* print_string */
 #include "tSgxSSL_api.h"
+#include "sgx_trts.h"
 
 #include <openssl/ec.h>
 #include <openssl/bn.h>
@@ -295,8 +296,39 @@ void t_sgxssl_call_apis()
     
     printf("Start tests\n");
     
-    OSSL_PROVIDER_load(NULL, "fips");
     SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
+
+#define BUILDIN_DEFAULT_or_SGXSSL_FIPS 0
+#if BUILDIN_DEFAULT_or_SGXSSL_FIPS
+    OSSL_PROVIDER_load(NULL, "default");
+#else
+    void *entry = get_ossl_fips_sym("OSSL_provider_init");
+
+    if (!entry )
+    {
+        printf("provider init func address not found\n");
+        exit(ret);
+    }
+
+    // OSSL_PROVIDER_add_builtin
+    ret = OSSL_PROVIDER_add_builtin(NULL, "sgxssl-fips", (OSSL_provider_init_fn *)entry);
+    if (ret != 1)
+    {
+        printf("provider add fail\n");
+        exit(ret);
+    }
+    printf("******************** provider_add_builtin success *********************\n");
+
+    OSSL_PROVIDER *fips;
+    fips = OSSL_PROVIDER_load(NULL, "sgxssl-fips");
+    if (fips == NULL) {
+        printf("Failed to load FIPS provider\n");
+        exit(EXIT_FAILURE);
+    } else {
+        printf("Loaded FIPS provider\n");
+    }
+
+#endif
 
     //CRYPTO_set_mem_functions(priv_malloc, priv_realloc, priv_free);
 
