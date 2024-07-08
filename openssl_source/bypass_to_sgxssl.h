@@ -295,6 +295,9 @@ char * sgxssl___builtin___strcpy_chk(char *dest, const char *src, unsigned int d
 #undef __REDIRECT_NTHNL
 #define __REDIRECT_NTHNL(name, proto, alias) name proto 
 
+#define BIO_new_file sgxssl_BIO_new_file
+#define BIO_read_ex sgxssl_BIO_read_ex
+
 #endif //_WIN32
 
 #endif // _BYPASS_TO_SGXSSL_
