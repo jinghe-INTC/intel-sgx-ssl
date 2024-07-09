@@ -254,7 +254,7 @@ char * sgxssl___builtin___strcpy_chk(char *dest, const char *src, unsigned int d
 
 //openssl 1.1.1 new APIs
 //
-#define getpid sgxssl_getpid
+#define getpid rdrand_for_fips
 #define stat sgxssl_stat
 #define syscall sgxssl_syscall
 #define pthread_atfork sgxssl_pthread_atfork
@@ -294,9 +294,6 @@ char * sgxssl___builtin___strcpy_chk(char *dest, const char *src, unsigned int d
 #define __REDIRECT_NTH(name, proto, alias) name proto 
 #undef __REDIRECT_NTHNL
 #define __REDIRECT_NTHNL(name, proto, alias) name proto 
-
-#define BIO_new_file sgxssl_BIO_new_file
-#define BIO_read_ex sgxssl_BIO_read_ex
 
 #endif //_WIN32
 

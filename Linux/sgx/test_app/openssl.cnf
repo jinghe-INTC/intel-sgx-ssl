@@ -1,0 +1,24 @@
+config_diagnostics = 1
+openssl_conf = openssl_init
+
+[openssl_init]
+providers = provider_sect
+alg_section = algorithm_sect
+
+[provider_sect]
+fips = fips_sect
+default = default_sect
+
+[default_sect]
+activate = 1
+
+[algorithm_sect]
+default_properties = fips=yes
+
+[fips_sect]
+activate = 1
+conditional-errors = 1
+security-checks = 1
+tls1-prf-ems-check = 1
+drbg-no-trunc-md = 1
+module-mac = 3D:B4:B2:C0:25:2E:01:93:06:07:96:22:88:7F:D2:6B:37:9A:F0:A6:7C:ED:93:64:02:8F:A3:5F:E2:79:C7:91

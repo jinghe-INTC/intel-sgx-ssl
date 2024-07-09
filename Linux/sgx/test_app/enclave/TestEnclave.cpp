@@ -297,7 +297,7 @@ void t_sgxssl_call_apis()
     printf("Start tests\n");
     
     SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
-
+    OSSL_PROVIDER *prov;
 #define BUILDIN_DEFAULT_or_SGXSSL_FIPS 0
 #if BUILDIN_DEFAULT_or_SGXSSL_FIPS
     OSSL_PROVIDER_load(NULL, "default");
@@ -320,9 +320,9 @@ void t_sgxssl_call_apis()
 	    printf("provider_add_builtin success\n");
     }
 
-    OSSL_PROVIDER *fips;
-    fips = OSSL_PROVIDER_load(NULL, "sgxssl-fips");
-    if (fips == NULL) {
+    
+    prov = OSSL_PROVIDER_load(NULL, "sgxssl-fips");
+    if (prov == NULL) {
         printf("Failed to load FIPS provider\n");
         exit(EXIT_FAILURE);
     } else {
@@ -330,22 +330,22 @@ void t_sgxssl_call_apis()
     }
 
 #endif
-    printf("OSSL_PROVIDER_self_test: %s\n", OSSL_PROVIDER_get0_name(fips));
+    printf("OSSL_PROVIDER_self_test: %s\n", OSSL_PROVIDER_get0_name(prov));
         const char *build = NULL;
     OSSL_PARAM request[] = {
         { "buildinfo", OSSL_PARAM_UTF8_PTR, &build, 0, 0 },
         { NULL, 0, NULL, 0, 0 }
     };
 
-    OSSL_PROVIDER_get_params(fips, request);
+    OSSL_PROVIDER_get_params(prov, request);
     printf("Provider buildinfo: %s\n", build);
 
     //CRYPTO_set_mem_functions(priv_malloc, priv_realloc, priv_free);
 
     // Initialize SGXSSL crypto
     OPENSSL_init_crypto(0, NULL);
-
-/*    ret = rsa_key_gen();
+#if BUILDIN_DEFAULT_or_SGXSSL_FIPS
+    ret = rsa_key_gen();
     if (ret != 0)
     {
         printf("test rsa_key_gen returned error %d\n", ret);
@@ -360,7 +360,7 @@ void t_sgxssl_call_apis()
         exit(ret);
     }
 	printf("test ec_key_gen completed\n");
-*/
+#endif
     ret = rsa_test();
     if (ret != 0)
     {
@@ -368,7 +368,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test rsa_test completed\n");
-/*
+#if BUILDIN_DEFAULT_or_SGXSSL_FIPS
 	ret = ec_test();
 	if (ret != 0)
     {
@@ -376,7 +376,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test ec_test completed\n");
-*/
+#endif
 	ret = ecdh_test();
 	if (ret != 0)
     {
@@ -384,7 +384,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test ecdh_test completed\n"); 
-/*
+#if BUILDIN_DEFAULT_or_SGXSSL_FIPS
 	ret = ecdsa_test();
 	if (ret != 0)
     {
@@ -392,7 +392,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test ecdsa_test completed\n");
-*/
+#endif
 	ret = bn_test();
 	if (ret != 0)
     {
@@ -400,7 +400,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test bn_test completed\n");
-/*
+#if BUILDIN_DEFAULT_or_SGXSSL_FIPS
 	ret = dhtest();
 	if (ret != 0)
     {
@@ -408,7 +408,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test dhtest completed\n");
-*/
+#endif
 	ret = aesccm_test();
 	if (ret != 0)
 	{
@@ -416,7 +416,7 @@ void t_sgxssl_call_apis()
 		exit(ret);
 	}
 	printf("test aesccm_test completed\n");
-/*
+#if BUILDIN_DEFAULT_or_SGXSSL_FIPS
 	ret = aesgcm_test();
 	if (ret != 0)
 	{
@@ -424,8 +424,8 @@ void t_sgxssl_call_apis()
 		exit(ret);
 	}
 	printf("test aesgcm_test completed\n");
-*/
-	ret = sha256_test();
+#endif
+       ret = sha256_test();
 	if (ret != 0)
     {
     	printf("test sha256_test returned error %d\n", ret);
@@ -456,7 +456,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test threads_test completed\n");
-/*
+#if BUILDIN_DEFAULT_or_SGXSSL_FIPS
     //GM SM2 - sign and verify
     ret = ecall_sm2_sign_verify();
     if (ret != 0)
@@ -501,5 +501,5 @@ void t_sgxssl_call_apis()
         exit(ret);
     }
     printf("test evp_sm4_ctr completed\n");
-*/
+#endif
 }
