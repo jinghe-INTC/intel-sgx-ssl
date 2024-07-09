@@ -329,7 +329,6 @@ void t_sgxssl_call_apis()
         printf("Loaded FIPS provider\n");
     }
 
-#endif
     printf("OSSL_PROVIDER_self_test: %s\n", OSSL_PROVIDER_get0_name(prov));
         const char *build = NULL;
     OSSL_PARAM request[] = {
@@ -339,7 +338,7 @@ void t_sgxssl_call_apis()
 
     OSSL_PROVIDER_get_params(prov, request);
     printf("Provider buildinfo: %s\n", build);
-
+#endif
     //CRYPTO_set_mem_functions(priv_malloc, priv_realloc, priv_free);
 
     // Initialize SGXSSL crypto
