@@ -29,17 +29,19 @@
  *
  */
 
-/* sgx_tssl.edl - Top EDL file. */
+#include <stdio.h>
 
-enclave {
-    
-    from "sgx_tstdc.edl" import *;
-    
-    untrusted {
-        void u_sgxssl_ftime([out, size=timeb_len] void * timeptr, uint32_t timeb_len);
-        //void u_sgxssl_usleep(int micro_seconds);
-	void *u_sgxssl_fopen([in, string]const char *filename, [in, string]const char *mode);
-	char* u_sgxssl_fgets([out, size=MaxCount]char* Buffer, uint32_t MaxCount, [user_check]void* Stream);
-    };
+#include "ucommon.h"
 
-};
+
+extern "C" {
+
+int* u_sgxssl_fopen(const char *filename, const char *mode)
+{
+	return (int*)fopen(filename, mode);
+}
+char* u_sgxssl_fgets(char* Buffer, int MaxCount, void* Stream)
+{
+	return fgets(Buffer, MaxCount, (FILE*)Stream);
+}
+}

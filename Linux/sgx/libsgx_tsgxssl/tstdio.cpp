@@ -52,4 +52,16 @@ int sgx_print(const char *format, ...)
 	return 0;
 }
 
+void *sgxssl_fopen(const char *filename, const char *mode)
+{
+	void *retval;
+	u_sgxssl_fopen(&retval, filename, mode);
+	return (void*)retval;
+}
+char* sgxssl_fgets(char* Buffer, int MaxCount, void* Stream)
+{
+	char *retval;
+	u_sgxssl_fgets(&retval, Buffer, MaxCount, Stream);
+	return retval;
+}
 }
