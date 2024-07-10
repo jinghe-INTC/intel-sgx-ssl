@@ -52,16 +52,20 @@ int sgx_print(const char *format, ...)
 	return 0;
 }
 
-void *sgxssl_fopen(const char *filename, const char *mode)
+uint64_t* sgxssl_fopen(const char *filename, const char *mode)
 {
-	void *retval;
+	uint64_t* retval;
 	u_sgxssl_fopen(&retval, filename, mode);
-	return (void*)retval;
+	return retval;
 }
-char* sgxssl_fgets(char* Buffer, int MaxCount, void* Stream)
+char* sgxssl_fgets(char* Buffer, int MaxCount, uint64_t* Stream)
 {
 	char *retval;
 	u_sgxssl_fgets(&retval, Buffer, MaxCount, Stream);
 	return retval;
+}
+void sgxssl_fclose(uint64_t* Stream)
+{
+        u_sgxssl_fclose(Stream);
 }
 }

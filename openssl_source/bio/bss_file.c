@@ -394,7 +394,7 @@ static int file_gets(BIO *bp, char *buf, int size)
         if (!UP_fgets(buf, size, bp->ptr))
             goto err;
     } else {
-        if (!sgxssl_fgets(buf, size, (FILE *)bp->ptr))
+        if (!sgxssl_fgets(buf, size, (unsigned long *)bp->ptr))
             goto err;
     }
     if (buf[0] != '\0')
@@ -407,8 +407,8 @@ static int file_free(BIO *a);
 static long file_ctrl(BIO *b, int cmd, long num, void *ptr)
 {
     long ret = 1;
-    FILE *fp = (FILE *)b->ptr;
-    FILE **fpp;
+    unsigned long *fp = (unsigned long *)b->ptr;
+    unsigned long **fpp;
     char p[4];
     int st;
 
@@ -613,10 +613,13 @@ const BIO_METHOD *BIO_s_file(void)
     return &methods_filep;
 }
 
+extern int u_sgxssl_fopen(unsigned long * file, const char *filename, const char *mode);
 BIO *BIO_new_file(const char *filename, const char *mode)
 {
     BIO  *ret;
-    FILE *file = openssl_fopen(filename, mode);
+    unsigned long *file = NULL;
+    u_sgxssl_fopen(&file, filename, mode);
+    
     int fp_flags = BIO_CLOSE;
 
     if (strchr(mode, 'b') == NULL)

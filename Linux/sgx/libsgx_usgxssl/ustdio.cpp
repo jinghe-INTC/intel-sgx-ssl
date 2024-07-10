@@ -36,12 +36,19 @@
 
 extern "C" {
 
-int* u_sgxssl_fopen(const char *filename, const char *mode)
+uint64_t* u_sgxssl_fopen(const char *filename, const char *mode)
 {
-	return (int*)fopen(filename, mode);
+	return (uint64_t*)fopen(filename, mode);
 }
+
 char* u_sgxssl_fgets(char* Buffer, int MaxCount, void* Stream)
 {
 	return fgets(Buffer, MaxCount, (FILE*)Stream);
 }
+
+void u_sgxssl_fclose(uint64_t* Stream)
+{
+        fclose((FILE*)Stream);
+}
+
 }

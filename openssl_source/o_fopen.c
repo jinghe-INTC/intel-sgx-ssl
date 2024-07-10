@@ -118,9 +118,10 @@ FILE *openssl_fopen(const char *filename, const char *mode)
 
 #else
 
-void *openssl_fopen(const char *filename, const char *mode)
+void* openssl_fopen(const char *filename, const char *mode)
 {
-    return sgxssl_fopen(filename, mode);
+    unsigned long* ret = sgxssl_fopen(filename, mode);
+    return ret; 
 }
 
 #endif
