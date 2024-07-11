@@ -7,10 +7,6 @@ alg_section = algorithm_sect
 
 [provider_sect]
 fips = fips_sect
-default = default_sect
-
-[default_sect]
-activate = 1
 
 [algorithm_sect]
 default_properties = fips=yes

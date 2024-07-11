@@ -590,7 +590,20 @@ static int file_new(BIO *bi)
 
 static int file_free(BIO *a)
 {
-    return 0;
+    if (a == NULL)
+        return 0;
+    if (a->shutdown) {
+        if ((a->init) && (a->ptr != NULL)) {
+            if (a->flags & BIO_FLAGS_UPLINK_INTERNAL)
+                UP_fclose(a->ptr);
+            else
+                fclose(a->ptr);
+            a->ptr = NULL;
+            a->flags = BIO_FLAGS_UPLINK_INTERNAL;
+        }
+        a->init = 0;
+    }
+    return 1;
 }
 
 static const BIO_METHOD methods_filep = {

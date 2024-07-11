@@ -311,7 +311,7 @@ void t_sgxssl_call_apis()
     }
 
     // OSSL_PROVIDER_add_builtin
-    ret = OSSL_PROVIDER_add_builtin(NULL, "sgxssl-fips", (OSSL_provider_init_fn *)entry);
+    ret = OSSL_PROVIDER_add_builtin(NULL, "fips", (OSSL_provider_init_fn *)entry);
     if (ret != 1)
     {
         printf("provider add fail\n");
@@ -321,7 +321,7 @@ void t_sgxssl_call_apis()
     }
 
     
-    prov = OSSL_PROVIDER_load(NULL, "sgxssl-fips");
+    prov = OSSL_PROVIDER_load(NULL, "fips");
     if (prov == NULL) {
         printf("Failed to load FIPS provider\n");
         exit(EXIT_FAILURE);

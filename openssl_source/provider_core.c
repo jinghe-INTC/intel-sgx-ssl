@@ -1938,7 +1938,7 @@ static int core_get_params(const OSSL_CORE_HANDLE *handle, OSSL_PARAM params[])
 
     if (prov->parameters == NULL)
         return 1;
-
+    int tmp = sk_INFOPAIR_num(prov->parameters);
     for (i = 0; i < sk_INFOPAIR_num(prov->parameters); i++) {
         INFOPAIR *pair = sk_INFOPAIR_value(prov->parameters, i);
 
