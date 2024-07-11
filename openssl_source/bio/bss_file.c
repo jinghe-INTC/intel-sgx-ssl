@@ -597,7 +597,7 @@ static int file_free(BIO *a)
             if (a->flags & BIO_FLAGS_UPLINK_INTERNAL)
                 UP_fclose(a->ptr);
             else
-                fclose(a->ptr);
+                sgxssl_fclose(a->ptr);
             a->ptr = NULL;
             a->flags = BIO_FLAGS_UPLINK_INTERNAL;
         }
@@ -653,7 +653,7 @@ BIO *BIO_new_file(const char *filename, const char *mode)
         return NULL;
     }
     if ((ret = BIO_new(BIO_s_file())) == NULL) {
-        //fclose(file);
+        sgxssl_fclose(file);
         return NULL;
     }
 

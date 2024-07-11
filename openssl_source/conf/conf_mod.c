@@ -214,7 +214,7 @@ int CONF_modules_load_file_ex(OSSL_LIB_CTX *libctx, const char *filename,
         goto err;
     }
 
-    //ret = CONF_modules_load(conf, appname, flags);
+    ret = CONF_modules_load(conf, appname, flags);
     diagnostics = conf_diagnostics(conf);
 
  err:
