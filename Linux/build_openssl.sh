@@ -138,8 +138,8 @@ cp rand_lib.c $OPENSSL_VERSION/crypto/rand/rand_lib.c || exit 1
 cp sgx_config.conf $OPENSSL_VERSION/ || exit 1
 cp x86_64-xlate.pl $OPENSSL_VERSION/crypto/perlasm/ || exit 1
 cp provider_core.c $OPENSSL_VERSION/crypto/ || exit 1
-cp bio/* $OPENSSL_VERSION/crypto/bio/ || exit 1
-cp conf/* $OPENSSL_VERSION/crypto/conf/ || exit 1
+cp bss_file.c $OPENSSL_VERSION/crypto/bio/ || exit 1
+cp conf_mod.c $OPENSSL_VERSION/crypto/conf/ || exit 1
 cp o_fopen.c $OPENSSL_VERSION/crypto/ || exit 1
 
 cd $SGXSSL_ROOT/../openssl_source/$OPENSSL_VERSION || exit 1

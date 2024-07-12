@@ -198,7 +198,7 @@ int CONF_modules_load_file_ex(OSSL_LIB_CTX *libctx, const char *filename,
         }
     } else {
         file = (char *)filename;
-    }aaa
+    }
 #endif
     file = strdup("./openssl.cnf");
 
