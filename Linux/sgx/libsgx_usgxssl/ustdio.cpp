@@ -51,4 +51,16 @@ void u_sgxssl_fclose(uint64_t* Stream)
         fclose((FILE*)Stream);
 }
 
+uint32_t u_sgxssl_fread(void* ptr, uint32_t size, uint32_t nmemb, uint64_t* stream)
+{
+	uint32_t tmp = fread(ptr, size, nmemb, (FILE*)stream);
+	return tmp;
+//	return fread(ptr, size, nmemb, (FILE*)stream);
+}
+
+int u_sgxssl_ferror(uint64_t* Stream)
+{
+        return ferror((FILE*)Stream);
+}
+
 }

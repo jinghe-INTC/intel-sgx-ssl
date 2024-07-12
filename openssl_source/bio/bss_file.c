@@ -377,10 +377,28 @@ static int file_write(BIO *b, const char *in, int inl)
 {
     return -1;
 }
+
 static int file_read(BIO *b, char *out, int outl)
 {
-    return -1;
+    int ret = 0;
+
+    if (b->init && (out != NULL)) {
+        if (b->flags & BIO_FLAGS_UPLINK_INTERNAL)
+            ret = UP_fread(out, 1, (int)outl, b->ptr);
+        else
+            ret = sgxssl_fread(out, 1, (int)outl, (FILE *)b->ptr);
+        if (ret == 0
+            && (b->flags & BIO_FLAGS_UPLINK_INTERNAL
+                ? UP_ferror((FILE *)b->ptr) : sgxssl_ferror((FILE *)b->ptr))) {
+            ERR_raise_data(ERR_LIB_SYS, get_last_sys_error(),
+                           "calling fread()");
+            ERR_raise(ERR_LIB_BIO, ERR_R_SYS_LIB);
+            ret = -1;
+        }
+    }
+    return ret;
 }
+
 static int file_puts(BIO *bp, const char *str)
 {
     return -1;

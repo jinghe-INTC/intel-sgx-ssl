@@ -68,4 +68,17 @@ void sgxssl_fclose(uint64_t* Stream)
 {
         u_sgxssl_fclose(Stream);
 }
+
+uint32_t sgxssl_fread(void* ptr, uint32_t size, uint32_t nmemb, uint64_t* stream)
+{
+	uint32_t retval;
+	u_sgxssl_fread(&retval, ptr, size, nmemb, stream);
+	return retval;
+}
+int sgxssl_ferror(uint64_t* stream)
+{
+	int retval;
+	u_sgxssl_ferror(&retval, stream);
+	return retval;
+}
 }
