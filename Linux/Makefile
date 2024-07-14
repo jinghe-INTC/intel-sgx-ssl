@@ -38,14 +38,6 @@ EMPTY_SRC = check_lvi_toolset
 all: sgxssl
 
 sgxssl:
-	@rm -rf $(EMPTY_SRC).* && touch $(EMPTY_SRC).cpp
-	@gcc -Wa,-mlfence-after-load=yes -c $(EMPTY_SRC).cpp 2> /dev/null \
-		|| (echo "Please follow the instruction at https://github.com/intel/linux-sgx/blob/master/README.md#build-the-intelr-sgx-sdk-and-intelr-sgx-psw-package to install \"mitigation tools\" first."  &&  exit 1)
-	@rm -rf $(EMPTY_SRC).*
-	$(MAKE) -C sgx/ clean
-	$(MAKE) -C sgx/ MITIGATION-CVE-2020-0551=LOAD
-	$(MAKE) -C sgx/ clean
-	$(MAKE) -C sgx/ MITIGATION-CVE-2020-0551=CF
 	$(MAKE) -C sgx/ clean
 	$(MAKE) -C sgx/ 
 
@@ -55,8 +47,6 @@ sgxssl_no_mitigation:
 clean:
 	$(MAKE) -C sgx/ clean
 	rm -rf $(PACKAGE_LIB)/$(OPENSSL_LIB) $(PACKAGE_INC)/openssl/
-	rm -rf $(PACKAGE_LIB)/cve_2020_0551_load
-	rm -rf $(PACKAGE_LIB)/cve_2020_0551_cf
 
 test:
 	$(MAKE) -C sgx/ test
