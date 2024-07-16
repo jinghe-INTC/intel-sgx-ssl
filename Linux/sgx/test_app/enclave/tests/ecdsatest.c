@@ -364,11 +364,9 @@ int setup_tests(void)
         //fake_rand_finish(fake_rand);
         return 0;
     }
-#ifndef SGXSSL_FIPS
     ADD_ALL_TESTS(test_builtin_as_ec, crv_len);
 # ifndef OPENSSL_NO_SM2
     ADD_ALL_TESTS(test_builtin_as_sm2, crv_len);
-# endif
 # endif
     ADD_ALL_TESTS(x9_62_tests, OSSL_NELEM(ecdsa_cavs_kats));
 #endif
