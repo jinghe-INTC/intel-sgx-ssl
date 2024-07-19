@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2017 Intel Corporation. All rights reserved.
+ * Copyright (C) 2011-2024 Intel Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,9 +29,38 @@
  *
  */
 
-#ifndef _TSGXSSL_IO_H_
-#define _TSGXSSL_IO_H_
+#include <stdio.h>
 
-typedef unsigned long FILE;
+#include "ucommon.h"
 
-#endif // _TSGXSSL_IO_H_
+
+extern "C" {
+
+uint64_t* u_sgxssl_fopen(const char *filename, const char *mode)
+{
+	return (uint64_t*)fopen(filename, mode);
+}
+
+char* u_sgxssl_fgets(char* Buffer, int MaxCount, void* Stream)
+{
+	return fgets(Buffer, MaxCount, (FILE*)Stream);
+}
+
+void u_sgxssl_fclose(uint64_t* Stream)
+{
+        fclose((FILE*)Stream);
+}
+
+uint32_t u_sgxssl_fread(void* ptr, uint32_t size, uint32_t nmemb, uint64_t* stream)
+{
+	uint32_t tmp = fread(ptr, size, nmemb, (FILE*)stream);
+	return tmp;
+//	return fread(ptr, size, nmemb, (FILE*)stream);
+}
+
+int u_sgxssl_ferror(uint64_t* Stream)
+{
+        return ferror((FILE*)Stream);
+}
+
+}

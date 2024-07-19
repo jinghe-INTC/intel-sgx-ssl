@@ -6,4 +6,5 @@
   <TCSNum>10</TCSNum>
   <TCSPolicy>1</TCSPolicy>
   <DisableDebug>0</DisableDebug>
+  <EnableOSSLFIPS>1</EnableOSSLFIPS>
 </EnclaveConfiguration>

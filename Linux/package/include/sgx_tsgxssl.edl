@@ -36,7 +36,12 @@ enclave {
     from "sgx_tstdc.edl" import *;
     
     untrusted {
-    	 void u_sgxssl_ftime([out, size=timeb_len] void * timeptr, uint32_t timeb_len);
+        void u_sgxssl_ftime([out, size=timeb_len] void * timeptr, uint32_t timeb_len);
+        uint64_t* u_sgxssl_fopen([in, string]const char* filename, [in, string]const char* mode);
+	char* u_sgxssl_fgets([out, size=size]char* buffer, uint32_t size, [user_check]uint64_t* stream);
+	void u_sgxssl_fclose([user_check]uint64_t* stream);
+	uint32_t u_sgxssl_fread([out, size=size, count=nmemb] void *ptr, uint32_t size, uint32_t nmemb, [user_check] uint64_t* stream);
+	int u_sgxssl_ferror([user_check]uint64_t* stream);
     };
 
 };

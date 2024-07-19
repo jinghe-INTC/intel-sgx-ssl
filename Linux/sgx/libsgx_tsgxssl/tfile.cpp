@@ -29,9 +29,41 @@
  *
  */
 
-#ifndef _TSGXSSL_IO_H_
-#define _TSGXSSL_IO_H_
+#include <stdio.h>
+#include "tcommon.h"
+#include "sgx_tsgxssl_t.h"
+#include "tSgxSSL_api.h"
 
-typedef unsigned long FILE;
+extern PRINT_TO_STDOUT_STDERR_CB s_print_cb;
 
-#endif // _TSGXSSL_IO_H_
+extern "C" {
+	uint64_t* sgxssl_fopen(const char *filename, const char *mode)
+{
+	uint64_t* retval;
+	u_sgxssl_fopen(&retval, filename, mode);
+	return retval;
+}
+char* sgxssl_fgets(char* Buffer, int MaxCount, uint64_t* Stream)
+{
+	char *retval;
+	u_sgxssl_fgets(&retval, Buffer, MaxCount, Stream);
+	return retval;
+}
+void sgxssl_fclose(uint64_t* Stream)
+{
+        u_sgxssl_fclose(Stream);
+}
+
+uint32_t sgxssl_fread(void* ptr, uint32_t size, uint32_t nmemb, uint64_t* stream)
+{
+	uint32_t retval;
+	u_sgxssl_fread(&retval, ptr, size, nmemb, stream);
+	return retval;
+}
+int sgxssl_ferror(uint64_t* stream)
+{
+	int retval;
+	u_sgxssl_ferror(&retval, stream);
+	return retval;
+}
+}
