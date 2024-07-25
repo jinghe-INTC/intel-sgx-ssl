@@ -30,13 +30,9 @@
 #
 include ../buildenv.mk
 
-ifeq ($(FIPS), 1)
-	SGXSSL_FIPS = 1
-endif
-
 all:
 	$(MAKE) -f sgx_u.mk LINUX_SGX_BUILD=$(LINUX_SGX_BUILD) all
-	$(MAKE) -f sgx_t.mk LINUX_SGX_BUILD=$(LINUX_SGX_BUILD) SGXSSL_FIPS=$(SGXSSL_FIPS) all
+	$(MAKE) -f sgx_t.mk LINUX_SGX_BUILD=$(LINUX_SGX_BUILD) FIPS=$(FIPS) all
 
 test: all
 	$(MAKE) -f sgx_u.mk test

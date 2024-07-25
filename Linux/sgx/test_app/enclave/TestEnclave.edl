@@ -32,9 +32,10 @@
 /* TestEnclave.edl - Top EDL file. */
 
 enclave {
-    
+
 from "sgx_tsgxssl.edl" import *;
 from "sgx_pthread.edl" import *;
+from "sgxssl_file.edl" import *;
     /* 
      * uprint - invokes OCALL to display string buffer inside the enclave.
      *  [in]: copy the string buffer to App outside.

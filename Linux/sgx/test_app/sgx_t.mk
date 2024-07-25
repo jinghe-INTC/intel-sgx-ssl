@@ -119,7 +119,7 @@ TestEnclave_C_Objects := $(TestEnclave_C_Files:.c=.o)
 TestEnclave_Include_Paths := -I. -I$(ENCLAVE_DIR) -I$(SGX_SDK_INC) -I$(SGX_SDK_INC)/tlibc -I$(LIBCXX_INC) -I$(PACKAGE_INC)
 
 Common_C_Cpp_Flags := -DOS_ID=$(OS_ID) $(SGX_COMMON_CFLAGS) -nostdinc -fvisibility=hidden -fpic -fpie -fstack-protector -fno-builtin-printf -Wformat -Wformat-security $(TestEnclave_Include_Paths) -include "tsgxsslio.h"
-ifeq ($(SGXSSL_FIPS), 1)
+ifeq ($(FIPS), 1)
 Common_C_Cpp_Flags += -DSGXSSL_FIPS -DOPENSSL_NO_SM2
 endif
 TestEnclave_C_Flags := $(Common_C_Cpp_Flags) -Wno-implicit-function-declaration -std=c11
@@ -129,7 +129,7 @@ SgxSSL_Link_Libraries := -L$(OPENSSL_LIBRARY_PATH) -Wl,--whole-archive -l$(SGXSS
 						 -l$(OpenSSL_Crypto_Library_Name)
 Security_Link_Flags := -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -pie
 
-ifeq ($(SGXSSL_FIPS), 1)
+ifeq ($(FIPS), 1)
 SGXSSL_FIPS_TLIB = -lsgx_ossl_fips
 endif
 
@@ -155,9 +155,13 @@ test: all
 
 
 ######## TestEnclave Objects ########
-
+ifeq ($(FIPS), 1)
+SGXSSL_ADDTIONAL_EDL_PATH=$(PACKAGE_INC)/filefunc
+else
+SGXSSL_ADDTIONAL_EDL_PATH=$(PACKAGE_INC)/nofilefunc
+endif
 $(ENCLAVE_DIR)/TestEnclave_t.c: $(SGX_EDGER8R) $(ENCLAVE_DIR)/TestEnclave.edl
-	@cd $(ENCLAVE_DIR) && $(SGX_EDGER8R) --trusted TestEnclave.edl --search-path $(PACKAGE_INC) --search-path $(SGX_SDK_INC)
+	@cd $(ENCLAVE_DIR) && $(SGX_EDGER8R) --trusted TestEnclave.edl --search-path $(PACKAGE_INC) --search-path $(SGX_SDK_INC) --search-path $(SGXSSL_ADDTIONAL_EDL_PATH)
 	@echo "GEN  =>  $@"
 
 $(ENCLAVE_DIR)/TestEnclave_t.o: $(ENCLAVE_DIR)/TestEnclave_t.c
@@ -187,7 +191,7 @@ ifeq ($(wildcard $(Enclave_Test_Key)),)
 	@openssl genrsa -out $(Enclave_Test_Key) -3 3072
 endif
 	@echo "SIGN =>  $@"
-ifeq ($(SGXSSL_FIPS), 1)
+ifeq ($(FIPS), 1)
 	@$(SGX_ENCLAVE_SIGNER) sign -key $(Enclave_Test_Key) -enclave TestEnclave.so -out $@ -config $(ENCLAVE_DIR)/TestEnclave.fips.config.xml
 	cp $(SGX_LIBRARY_PATH)/fips.so .
 	cp $(SGX_LIBRARY_PATH)/openssl.cnf .

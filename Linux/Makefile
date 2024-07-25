@@ -36,13 +36,11 @@ EMPTY_SRC = check_lvi_toolset
 
 ifeq ($(FIPS), 1)
 BUILD_TARGET = sgxssl_no_mitigation
-SGXSSL_FIPS = 1
 else
 BUILD_TARGET = sgxssl
 endif
 
 all: $(BUILD_TARGET)
-	echo $(BUILD_TARGET)
 
 sgxssl:
 	@rm -rf $(EMPTY_SRC).* && touch $(EMPTY_SRC).cpp
@@ -57,7 +55,7 @@ sgxssl:
 	$(MAKE) -C sgx/ 
 
 sgxssl_no_mitigation:
-	$(MAKE) -C sgx/ all SGXSSL_FIPS=$(SGXSSL_FIPS)
+	$(MAKE) -C sgx/ all FIPS=$(FIPS)
 
 clean:
 	$(MAKE) -C sgx/ clean
