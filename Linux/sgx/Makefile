@@ -53,6 +53,10 @@ ifeq ($(OSSL3ONLY), 1)
 	OPENSSL_CONFIG += only3x
 endif
 
+ifeq ($(FIPS), 1)
+	OPENSSL_CONFIG += fips
+endif
+
 all: $(PACKAGE_LIB)/$(OPENSSL_LIB)
 ifneq ($(CRYPTO_ONLY), 1)
 	$(MAKE) -C $(TRUSTED_LIB_DIR) all

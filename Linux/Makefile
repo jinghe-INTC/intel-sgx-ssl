@@ -34,19 +34,36 @@ LINUX_SGX_BUILD ?= 0
 EMPTY_SRC = check_lvi_toolset
 .PHONY: sgxssl sgxssl_no_mitigation clean install uninstall
 
+ifeq ($(FIPS), 1)
+BUILD_TARGET = sgxssl_no_mitigation
+SGXSSL_FIPS = 1
+else
+BUILD_TARGET = sgxssl
+endif
 
-all: sgxssl
+all: $(BUILD_TARGET)
+	echo $(BUILD_TARGET)
 
 sgxssl:
+	@rm -rf $(EMPTY_SRC).* && touch $(EMPTY_SRC).cpp
+	@gcc -Wa,-mlfence-after-load=yes -c $(EMPTY_SRC).cpp 2> /dev/null \
+		|| (echo "Please follow the instruction at https://github.com/intel/linux-sgx/blob/master/README.md#build-the-intelr-sgx-sdk-and-intelr-sgx-psw-package to install \"mitigation tools\" first."  &&  exit 1)
+	@rm -rf $(EMPTY_SRC).*
+	$(MAKE) -C sgx/ clean
+	$(MAKE) -C sgx/ MITIGATION-CVE-2020-0551=LOAD
+	$(MAKE) -C sgx/ clean
+	$(MAKE) -C sgx/ MITIGATION-CVE-2020-0551=CF
 	$(MAKE) -C sgx/ clean
 	$(MAKE) -C sgx/ 
 
 sgxssl_no_mitigation:
-	$(MAKE) -C sgx/ all
+	$(MAKE) -C sgx/ all SGXSSL_FIPS=$(SGXSSL_FIPS)
 
 clean:
 	$(MAKE) -C sgx/ clean
 	rm -rf $(PACKAGE_LIB)/$(OPENSSL_LIB) $(PACKAGE_INC)/openssl/
+	rm -rf $(PACKAGE_LIB)/cve_2020_0551_load
+	rm -rf $(PACKAGE_LIB)/cve_2020_0551_cf
 
 test:
 	$(MAKE) -C sgx/ test
