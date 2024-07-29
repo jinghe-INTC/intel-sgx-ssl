@@ -291,7 +291,7 @@ void t_sgxssl_call_apis()
     SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
     OSSL_PROVIDER *prov;
 #ifndef SGXSSL_FIPS
-    OSSL_PROVIDER_load(NULL, "default");
+    prov = OSSL_PROVIDER_load(NULL, "default");
 #else
     void *entry = get_ossl_fips_sym("OSSL_provider_init");
 
@@ -506,7 +506,5 @@ void t_sgxssl_call_apis()
     }
     printf("test evp_sm4_ctr completed\n");
 #endif
-#ifdef SGXSSL_FIPS
     OSSL_PROVIDER_unload(prov);
-#endif
 }
