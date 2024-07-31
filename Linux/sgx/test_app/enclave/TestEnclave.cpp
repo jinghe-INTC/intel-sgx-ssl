@@ -48,6 +48,8 @@
 
 #define ADD_ENTROPY_SIZE	32
 
+OSSL_LIB_CTX *libctx = NULL;
+
 /* 
  * printf: 
  *   Invokes OCALL to display the enclave buffer to the terminal.
@@ -92,10 +94,11 @@ struct evp_pkey_st {
 
 int rsa_key_gen()
 {
-    EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, NULL);
+    EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new_from_name(libctx, "RSA", NULL);
+    //EVP_PKEY_CTX_new_id() doesn't work properly with FIPS provider
     if (!ctx)
     {
-        printf("EVP_PKEY_CTX_new_id: %ld\n", ERR_get_error());
+        printf("EVP_PKEY_CTX_new_from_name: %ld\n", ERR_get_error());
         return -1;
     }
     int ret = EVP_PKEY_keygen_init(ctx);
@@ -167,10 +170,11 @@ int rsa_key_gen()
 
 int ec_key_gen()
 {
-    EVP_PKEY_CTX * ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_EC, NULL);
+    EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new_from_name(libctx, "EC", NULL);
+    //EVP_PKEY_CTX_new_id() doesn't work properly with FIPS provider
     if (!ctx)
     {
-        printf("EVP_PKEY_CTX_new_id: %ld\n", ERR_get_error());
+        printf("EVP_PKEY_CTX_new_from_name: %ld\n", ERR_get_error());
         return -1;
     }
     int ret = EVP_PKEY_keygen_init(ctx);
@@ -298,7 +302,7 @@ void t_sgxssl_call_apis()
     if (!entry )
     {
         printf("provider init func address not found\n");
-        exit(ret);
+        goto end;
     }
 
     // OSSL_PROVIDER_add_builtin
@@ -306,7 +310,7 @@ void t_sgxssl_call_apis()
     if (ret != 1)
     {
         printf("FIPS provider add fail\n");
-        exit(ret);
+        goto end;
     } else {
         printf("OSSL_PROVIDER_add_builtin added FIPS entry\n");
     }
@@ -348,12 +352,17 @@ void t_sgxssl_call_apis()
 
     // Initialize SGXSSL crypto
     OPENSSL_init_crypto(0, NULL);
-#ifndef SGXSSL_FIPS
+
+    libctx = OSSL_LIB_CTX_new();//added for keygen test with FIPS provider
+    if (libctx == NULL) {
+        goto end;
+    }
+
     ret = rsa_key_gen();
     if (ret != 0)
     {
         printf("test rsa_key_gen returned error %d\n", ret);
-        exit(ret);
+        goto end;
     }
     printf("test rsa_key_gen completed\n");
 
@@ -361,15 +370,15 @@ void t_sgxssl_call_apis()
     if (ret != 0)
     {
         printf("test ec_key_gen returned error %d\n", ret);
-        exit(ret);
+        goto end;
     }
 	printf("test ec_key_gen completed\n");
-#endif
+
     ret = rsa_test();
     if (ret != 0)
     {
     	printf("test rsa_test returned error %d\n", ret);
-    	exit(ret);
+    	goto end;
     }
 	printf("test rsa_test completed\n");
 #ifndef SGXSSL_FIPS
@@ -377,7 +386,7 @@ void t_sgxssl_call_apis()
 	if (ret != 0)
     {
     	printf("test ec_test returned error %d\n", ret);
-    	exit(ret);
+    	goto end;
     }
 	printf("test ec_test completed\n");
 #endif
@@ -385,7 +394,7 @@ void t_sgxssl_call_apis()
 	if (ret != 0)
     {
     	printf("test ecdh_test returned error %d\n", ret);
-    	exit(ret);
+    	goto end;
     }
 	printf("test ecdh_test completed\n"); 
 
@@ -393,7 +402,7 @@ void t_sgxssl_call_apis()
 	if (ret != 0)
     {
         printf("test ecdsa_test returned error %d\n", ret);
-    	exit(ret);
+    	goto end;
     }
 	printf("test ecdsa_test completed\n");
 
@@ -401,7 +410,7 @@ void t_sgxssl_call_apis()
 	if (ret != 0)
     {
     	printf("test bn_test returned error %d\n", ret);
-    	exit(ret);
+    	goto end;
     }
 	printf("test bn_test completed\n");
 #ifndef SGXSSL_FIPS
@@ -409,7 +418,7 @@ void t_sgxssl_call_apis()
 	if (ret != 0)
     {
     	printf("test dhtest returned error %d\n", ret);
-    	exit(ret);
+    	goto end;
     }
 	printf("test dhtest completed\n");
 #endif
@@ -417,7 +426,7 @@ void t_sgxssl_call_apis()
 	if (ret != 0)
 	{
 		printf("test aesccm_test returned error %d\n", ret);
-		exit(ret);
+		goto end;
 	}
 	printf("test aesccm_test completed\n");
 #ifndef SGXSSL_FIPS
@@ -425,7 +434,7 @@ void t_sgxssl_call_apis()
 	if (ret != 0)
 	{
 		printf("test aesgcm_test returned error %d\n", ret);
-		exit(ret);
+		goto end;
 	}
 	printf("test aesgcm_test completed\n");
 #endif
@@ -433,7 +442,7 @@ void t_sgxssl_call_apis()
 	if (ret != 0)
     {
     	printf("test sha256_test returned error %d\n", ret);
-    	exit(ret);
+    	goto end;
     }
 	printf("test sha256_test completed\n");
 	
@@ -441,7 +450,7 @@ void t_sgxssl_call_apis()
 	if (ret != 0)
     {
     	printf("test sha1_test returned error %d\n", ret);
-    	exit(ret);
+    	goto end;
     }
 	printf("test sha1_test completed\n");
 
@@ -449,7 +458,7 @@ void t_sgxssl_call_apis()
         if (ret != 0)
     {
         printf("test hmac_test returned error %d\n", ret);
-        exit(ret);
+        goto end;
     }
         printf("test hmac_test completed\n");
 
@@ -457,7 +466,7 @@ void t_sgxssl_call_apis()
 	if (ret != 0)
     {
     	printf("test threads_test returned error %d\n", ret);
-    	exit(ret);
+    	goto end;
     }
 	printf("test threads_test completed\n");
 #ifndef SGXSSL_FIPS
@@ -466,7 +475,7 @@ void t_sgxssl_call_apis()
     if (ret != 0)
     {
         printf("test evp_sm2_sign_verify returned error %d\n", ret);
-        exit(ret);
+        goto end;
     }
     printf("test evp_sm2_sign_verify completed\n");
 
@@ -475,7 +484,7 @@ void t_sgxssl_call_apis()
     if (ret != 0)
     {
         printf("test evp_sm2_encrypt_decrypt returned error %d\n", ret);
-        exit(ret);
+        goto end;
     }
     printf("test evp_sm2_encrypt_decrypt completed\n");
 
@@ -484,7 +493,7 @@ void t_sgxssl_call_apis()
     if (ret != 0)
     {
         printf("test evp_sm3 returned error %d\n", ret);
-        exit(ret);
+        goto end;
     }
     printf("test evp_sm3 completed\n");
 
@@ -493,7 +502,7 @@ void t_sgxssl_call_apis()
     if (ret != 0)
     {
         printf("test evp_sm4_cbc returned error %d\n", ret);
-        exit(ret);
+        goto end;
     }
     printf("test evp_sm4_cbc completed\n");
 
@@ -502,9 +511,12 @@ void t_sgxssl_call_apis()
     if (ret != 0)
     {
         printf("test evp_sm4_ctr returned error %d\n", ret);
-        exit(ret);
+        goto end;
     }
     printf("test evp_sm4_ctr completed\n");
 #endif
+    printf("ALL tests in t_sgxssl_call_apis passed!\n");
+end:
     OSSL_PROVIDER_unload(prov);
+    OSSL_LIB_CTX_free(libctx);
 }
